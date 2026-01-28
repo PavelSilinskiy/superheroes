@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
+import 'package:superheroes/resourses/superheroes_colors.dart';
 
 class MainPage extends StatelessWidget {
   final MainBloc bloc = MainBloc();
@@ -9,6 +10,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: SuperheroesColors.background,
       body: SafeArea(
         child: StreamBuilder<MainPageState>(
           stream: bloc.observeMainPageState(),
@@ -17,7 +19,10 @@ class MainPage extends StatelessWidget {
               return SizedBox();
             } else {
               return Center(
-                child: Text(snapshot.data.toString()),
+                    child: Text(
+                      snapshot.data.toString(),
+                      style: TextStyle(color: SuperheroesColors.whiteText),
+                    ),
               );
             }
           },
