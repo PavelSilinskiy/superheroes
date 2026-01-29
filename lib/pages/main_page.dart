@@ -12,20 +12,39 @@ class MainPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: SuperheroesColors.background,
       body: SafeArea(
-        child: StreamBuilder<MainPageState>(
-          stream: bloc.observeMainPageState(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData || snapshot.data == null) {
-              return SizedBox();
-            } else {
-              return Center(
+        child: Stack(
+          children: [
+            StreamBuilder<MainPageState>(
+              stream: bloc.observeMainPageState(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return SizedBox();
+                } else {
+                  return Center(
                     child: Text(
                       snapshot.data.toString(),
                       style: TextStyle(color: SuperheroesColors.whiteText),
                     ),
-              );
-            }
-          },
+                  );
+                }
+              },
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: GestureDetector(
+                onTap: () {
+                  print('tapped');
+                },
+                child: Text(
+                  "Next state".toUpperCase(),
+                  style: TextStyle(
+                    color: SuperheroesColors.whiteText,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
