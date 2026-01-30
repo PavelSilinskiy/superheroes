@@ -6,4 +6,5 @@ class SuperheroesColors {
   static const Color background = Color(0xFFE10141E);
   static const Color whiteText = Color(0xFFFFFFFF);
   static const Color progressIndicator = Color(0xFF00BCD4);
+  static const Color actionButtonBackground = Color(0xFF00BCD4);
 }
