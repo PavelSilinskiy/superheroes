@@ -16,7 +16,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: SuperheroesColors.background,
-      body: SafeArea(child: MainPageWidget(bloc: bloc)),
+      body: SafeArea(child: MainPageContent()),
     );
   }
 
@@ -26,55 +26,17 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class MainPageWidget extends StatelessWidget {
-  final MainBloc bloc;
-
-  const MainPageWidget({super.key, required this.bloc});
+class MainPageContent extends StatelessWidget {
+  const MainPageContent({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final _MainPageState state = context
+        .findAncestorStateOfType<_MainPageState>()!;
+    final MainBloc bloc = state.bloc;
     return Stack(
       children: [
-        Center(
-          child: StreamBuilder<MainPageState>(
-            stream: bloc.observeMainPageState(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return SizedBox();
-              } else {
-                final state = snapshot.data!;
-                switch (state) {
-                  //case MainPageState.noFavorites:
-                  // TODO: Handle this case.
-
-                  //case MainPageState.minSymbols:
-                  // TODO: Handle this case.
-
-                  case MainPageState.loading:
-                    return LoadingIndicator();
-
-                  //case MainPageState.nothingFound:
-                  // TODO: Handle this case.
-
-                  //case MainPageState.loadingError:
-                  // TODO: Handle this case.
-
-                  //case MainPageState.searchResults:
-                  // TODO: Handle this case.
-
-                  //case MainPageState.favorites:
-                  // TODO: Handle this case.
-
-                  default:
-                    return Text(
-                      state.toString(),
-                      style: TextStyle(color: SuperheroesColors.whiteText),
-                    );
-                }
-              }
-            },
-          ),
-        ),
+        Center(child: MainPageStateWidget()),
         Align(
           alignment: Alignment.bottomCenter,
           child: GestureDetector(
@@ -91,6 +53,55 @@ class MainPageWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class MainPageStateWidget extends StatelessWidget {
+  const MainPageStateWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final _MainPageState state = context
+        .findAncestorStateOfType<_MainPageState>()!;
+    final MainBloc bloc = state.bloc;
+    return StreamBuilder<MainPageState>(
+      stream: bloc.observeMainPageState(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return SizedBox();
+        } else {
+          final state = snapshot.data!;
+          switch (state) {
+            //case MainPageState.noFavorites:
+            // TODO: Handle this case.
+
+            //case MainPageState.minSymbols:
+            // TODO: Handle this case.
+
+            case MainPageState.loading:
+              return LoadingIndicator();
+
+            //case MainPageState.nothingFound:
+            // TODO: Handle this case.
+
+            //case MainPageState.loadingError:
+            // TODO: Handle this case.
+
+            //case MainPageState.searchResults:
+            // TODO: Handle this case.
+
+            //case MainPageState.favorites:
+            // TODO: Handle this case.
+
+            default:
+              return Text(
+                state.toString(),
+                style: TextStyle(color: SuperheroesColors.whiteText),
+              );
+          }
+        }
+      },
     );
   }
 }
