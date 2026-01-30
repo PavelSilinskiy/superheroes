@@ -16,42 +16,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: SuperheroesColors.background,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: StreamBuilder<MainPageState>(
-                stream: bloc.observeMainPageState(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData || snapshot.data == null) {
-                    return SizedBox();
-                  } else {
-                    return Text(
-                      snapshot.data.toString(),
-                      style: TextStyle(color: SuperheroesColors.whiteText),
-                    );
-                  }
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: GestureDetector(
-                onTap: () {
-                  bloc.nextState();
-                },
-                child: Text(
-                  "Next state".toUpperCase(),
-                  style: TextStyle(
-                    color: SuperheroesColors.whiteText,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: SafeArea(child: MainPageWidget(bloc: bloc)),
     );
   }
 
@@ -77,10 +42,35 @@ class MainPageWidget extends StatelessWidget {
               if (!snapshot.hasData || snapshot.data == null) {
                 return SizedBox();
               } else {
-                return Text(
-                  snapshot.data.toString(),
-                  style: TextStyle(color: SuperheroesColors.whiteText),
-                );
+                final state = snapshot.data!;
+                switch (state) {
+                  //case MainPageState.noFavorites:
+                  // TODO: Handle this case.
+
+                  //case MainPageState.minSymbols:
+                  // TODO: Handle this case.
+
+                  case MainPageState.loading:
+                    return LoadingIndicator();
+
+                  //case MainPageState.nothingFound:
+                  // TODO: Handle this case.
+
+                  //case MainPageState.loadingError:
+                  // TODO: Handle this case.
+
+                  //case MainPageState.searchResults:
+                  // TODO: Handle this case.
+
+                  //case MainPageState.favorites:
+                  // TODO: Handle this case.
+
+                  default:
+                    return Text(
+                      state.toString(),
+                      style: TextStyle(color: SuperheroesColors.whiteText),
+                    );
+                }
               }
             },
           ),
@@ -101,6 +91,24 @@ class MainPageWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class LoadingIndicator extends StatelessWidget {
+  const LoadingIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 110),
+      child: Align(
+        alignment: AlignmentGeometry.topCenter,
+        child: CircularProgressIndicator(
+          color: SuperheroesColors.progressIndicator,
+          strokeWidth: 4,
+        ),
+      ),
     );
   }
 }
