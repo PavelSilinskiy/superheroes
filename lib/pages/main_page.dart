@@ -60,3 +60,47 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 }
+
+class MainPageWidget extends StatelessWidget {
+  final MainBloc bloc;
+
+  const MainPageWidget({super.key, required this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Center(
+          child: StreamBuilder<MainPageState>(
+            stream: bloc.observeMainPageState(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.data == null) {
+                return SizedBox();
+              } else {
+                return Text(
+                  snapshot.data.toString(),
+                  style: TextStyle(color: SuperheroesColors.whiteText),
+                );
+              }
+            },
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: GestureDetector(
+            onTap: () {
+              bloc.nextState();
+            },
+            child: Text(
+              "Next state".toUpperCase(),
+              style: TextStyle(
+                color: SuperheroesColors.whiteText,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
