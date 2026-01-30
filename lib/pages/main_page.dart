@@ -20,6 +20,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  @override
   void dispose() {
     bloc.dispose();
     super.dispose();
