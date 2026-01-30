@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
 
-class MainPage extends StatelessWidget {
-  final MainBloc bloc = MainBloc();
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
-  MainPage({super.key});
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  final MainBloc bloc = MainBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +38,7 @@ class MainPage extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: GestureDetector(
                 onTap: () {
-                  print('tapped');
+                  bloc.nextState();
                 },
                 child: Text(
                   "Next state".toUpperCase(),
@@ -48,5 +53,10 @@ class MainPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 }

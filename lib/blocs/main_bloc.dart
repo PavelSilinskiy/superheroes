@@ -1,9 +1,27 @@
+import 'dart:async';
+
+import 'package:rxdart/subjects.dart';
+
 class MainBloc {
+  final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
+
+  MainBloc() {
+    _stateSubject.sink.add(MainPageState.noFavorites);
+  }
+
   Stream<MainPageState> observeMainPageState() {
-    return Stream.periodic(
-      Duration(seconds: 2),
-      (tick) => tick,
-    ).map((tick) => MainPageState.values[tick % MainPageState.values.length]);
+    return _stateSubject;
+  }
+
+  void nextState() {
+    final currentState = _stateSubject.value;
+    final nextState = MainPageState
+        .values[(currentState.index + 1) % MainPageState.values.length];
+    _stateSubject.sink.add(nextState);
+  }
+
+  void dispose() {
+    _stateSubject.close();
   }
 }
 
