@@ -19,20 +19,20 @@ class _MainPageState extends State<MainPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            StreamBuilder<MainPageState>(
-              stream: bloc.observeMainPageState(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.data == null) {
-                  return SizedBox();
-                } else {
-                  return Center(
-                    child: Text(
+            Center(
+              child: StreamBuilder<MainPageState>(
+                stream: bloc.observeMainPageState(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return SizedBox();
+                  } else {
+                    return Text(
                       snapshot.data.toString(),
                       style: TextStyle(color: SuperheroesColors.whiteText),
-                    ),
-                  );
-                }
-              },
+                    );
+                  }
+                },
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
