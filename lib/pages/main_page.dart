@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -156,8 +157,40 @@ class MainPageStateWidget extends StatelessWidget {
             //case MainPageState.searchResults:
             // TODO: Handle this case.
 
-            //case MainPageState.favorites:
-            // TODO: Handle this case.
+            case MainPageState.favorites:
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 90),
+
+                    Text(
+                      textAlign: TextAlign.left,
+                      'Your favorites',
+                      style: TextStyle(
+                        color: SuperheroesColors.whiteText,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SuperheroCard(
+                      imageUrl:
+                          'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+                      name: 'Batman',
+                      realName: 'Bruce Wayne',
+                    ),
+                    SizedBox(height: 8),
+                    SuperheroCard(
+                      imageUrl:
+                          'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
+                      name: 'Ironman',
+                      realName: 'Tony Stark',
+                    ),
+                  ],
+                ),
+              );
 
             default:
               return Text(
