@@ -77,7 +77,21 @@ class MainPageStateWidget extends StatelessWidget {
             //case MainPageState.noFavorites:
             // TODO: Handle this case.
 
-            //case MainPageState.minSymbols:
+            case MainPageState.minSymbols:
+              return Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 110.0),
+                  child: Text(
+                    "Enter at least 3 symbols",
+                    style: TextStyle(
+                      color: SuperheroesColors.whiteText,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              );
             // TODO: Handle this case.
 
             case MainPageState.loading:
