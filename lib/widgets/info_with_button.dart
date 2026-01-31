@@ -30,28 +30,27 @@ class InfoWithButton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
 
         children: [
-          Center(
-            child: Stack(
-              children: [
-                Container(
-                  height: 108,
-                  width: 108,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: SuperheroesColors.foregroundColor,
-                  ),
+          Stack(
+            alignment: AlignmentGeometry.topCenter,
+            children: [
+              Container(
+                height: 108,
+                width: 108,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: SuperheroesColors.foregroundColor,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: imageTopPudding),
-                  child: Image.asset(
-                    assetImage,
-                    width: imageWidth,
-                    height: imageHeight,
-                    fit: BoxFit.cover,
-                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: imageTopPudding),
+                child: Image.asset(
+                  assetImage,
+                  width: imageWidth,
+                  height: imageHeight,
+                  fit: BoxFit.cover,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           SizedBox(height: 20),
           Text(
