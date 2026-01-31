@@ -92,7 +92,6 @@ class MainPageStateWidget extends StatelessWidget {
                   ),
                 ),
               );
-            // TODO: Handle this case.
 
             case MainPageState.loading:
               return LoadingIndicator();
