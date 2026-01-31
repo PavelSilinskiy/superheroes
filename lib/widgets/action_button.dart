@@ -14,7 +14,7 @@ class ActionButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
         decoration: BoxDecoration(
-          color: SuperheroesColors.actionButtonBackground,
+          color: SuperheroesColors.foregroundColor,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
