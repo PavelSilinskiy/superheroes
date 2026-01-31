@@ -158,14 +158,14 @@ class MainPageStateWidget extends StatelessWidget {
             // TODO: Handle this case.
 
             case MainPageState.favorites:
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 90),
-
-                    Text(
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 90),
+              
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
                       textAlign: TextAlign.left,
                       'Your favorites',
                       style: TextStyle(
@@ -174,22 +174,28 @@ class MainPageStateWidget extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    SizedBox(height: 20),
-                    SuperheroCard(
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SuperheroCard(
                       imageUrl:
                           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
                       name: 'Batman',
                       realName: 'Bruce Wayne',
                     ),
-                    SizedBox(height: 8),
-                    SuperheroCard(
+                  ),
+                  SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SuperheroCard(
                       imageUrl:
                           'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
                       name: 'Ironman',
                       realName: 'Tony Stark',
                     ),
-                  ],
-                ),
+                  ),
+                ],
               );
 
             default:
