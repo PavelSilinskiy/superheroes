@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
+import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
 import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
@@ -215,6 +216,14 @@ class FavoritesStateScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SuperheroCard(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(name: 'Batman'),
+                ),
+              );
+            },
             imageUrl:
                 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
             name: 'Batman',
@@ -225,6 +234,14 @@ class FavoritesStateScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SuperheroCard(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(name: 'Ironman'),
+                ),
+              );
+            },
             imageUrl:
                 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
             name: 'Ironman',
@@ -262,6 +279,14 @@ class SearchResultsStateScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SuperheroCard(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(name: 'Batman'),
+                ),
+              );
+            },
             imageUrl:
                 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
             name: 'Batman',
@@ -272,6 +297,14 @@ class SearchResultsStateScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SuperheroCard(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SuperheroPage(name: 'Venom'),
+                ),
+              );
+            },
             imageUrl:
                 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
             name: 'Venom',
