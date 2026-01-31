@@ -94,11 +94,27 @@ class MainPageStateWidget extends StatelessWidget {
             case MainPageState.loading:
               return LoadingIndicator();
 
-            //case MainPageState.nothingFound:
-            // TODO: Handle this case.
+            case MainPageState.nothingFound:
+              return InfoWithButton(
+                title: 'Nothing found',
+                subtitle: 'Search for something else',
+                buttonText: 'Search',
+                assetImage: 'assets/images/hulk.png',
+                imageHeight: 112,
+                imageWidth: 84,
+                imageTopPudding: 16,
+              );
 
-            //case MainPageState.loadingError:
-            // TODO: Handle this case.
+            case MainPageState.loadingError:
+              return InfoWithButton(
+                title: 'Error happened',
+                subtitle: 'Please, try again',
+                buttonText: 'Retry',
+                assetImage: 'assets/images/superman.png',
+                imageHeight: 106,
+                imageWidth: 126,
+                imageTopPudding: 24,
+              );
 
             case MainPageState.searchResults:
               return SearchResultsStateScreen();
