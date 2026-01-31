@@ -74,8 +74,59 @@ class MainPageStateWidget extends StatelessWidget {
         } else {
           final state = snapshot.data!;
           switch (state) {
-            //case MainPageState.noFavorites:
-            // TODO: Handle this case.
+            case MainPageState.noFavorites:
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                  children: [
+                    Center(
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 108,
+                            width: 108,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: SuperheroesColors.foregroundColor,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 9.0),
+                            child: Image.asset(
+                              'assets/images/ironman.png',
+                              width: 108,
+                              height: 119,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'No favorites yet',
+                      style: TextStyle(
+                        color: SuperheroesColors.whiteText,
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Search and add'.toUpperCase(),
+                      style: TextStyle(
+                        color: SuperheroesColors.whiteText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    ActionButton(text: 'Search', onPressed: () {}),
+                  ],
+                ),
+              );
 
             case MainPageState.minSymbols:
               return Align(
@@ -130,7 +181,7 @@ class LoadingIndicator extends StatelessWidget {
       child: Align(
         alignment: AlignmentGeometry.topCenter,
         child: CircularProgressIndicator(
-          color: SuperheroesColors.progressIndicator,
+          color: SuperheroesColors.foregroundColor,
           strokeWidth: 4,
         ),
       ),
