@@ -4,6 +4,7 @@ import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
 class MainPage extends StatefulWidget {
@@ -77,7 +78,15 @@ class MainPageStateWidget extends StatelessWidget {
           final state = snapshot.data!;
           switch (state) {
             case MainPageState.noFavorites:
-              return NoFavoritesStateScreen();
+              return InfoWithButton(
+                title: 'No favorites yet',
+                subtitle: 'Search and add',
+                buttonText: 'Search',
+                assetImage: 'assets/images/ironman.png',
+                imageHeight: 119,
+                imageWidth: 108,
+                imageTopPudding: 9,
+              );
 
             case MainPageState.minSymbols:
               return MinSymbolsStateScreen();
@@ -125,66 +134,6 @@ class MinSymbolsStateScreen extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class NoFavoritesStateScreen extends StatelessWidget {
-  const NoFavoritesStateScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-
-        children: [
-          Center(
-            child: Stack(
-              children: [
-                Container(
-                  height: 108,
-                  width: 108,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: SuperheroesColors.foregroundColor,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 9.0),
-                  child: Image.asset(
-                    'assets/images/ironman.png',
-                    width: 108,
-                    height: 119,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            'No favorites yet',
-            style: TextStyle(
-              color: SuperheroesColors.whiteText,
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            'Search and add'.toUpperCase(),
-            style: TextStyle(
-              color: SuperheroesColors.whiteText,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 30),
-          ActionButton(text: 'Search', onPressed: () {}),
-        ],
       ),
     );
   }
