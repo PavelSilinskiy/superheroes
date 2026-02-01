@@ -74,6 +74,7 @@ class SearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
+      
       onChanged: bloc.updateText,
       style: TextStyle(
         fontSize: 20,
@@ -81,12 +82,21 @@ class SearchWidget extends StatelessWidget {
         color: SuperheroesColors.whiteText,
       ),
       decoration: InputDecoration(
+        isDense: true,
         filled: true,
         fillColor: SuperheroesColors.searchBarBackground,
         prefixIcon: Icon(
           Icons.search,
           color: SuperheroesColors.enabledSearchText,
           size: 24,
+        ),
+        suffix: GestureDetector(
+          onTap: () {print('clear');},
+          child: Icon(
+            Icons.clear,
+            color: SuperheroesColors.whiteText,
+            size: 24,
+          ),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
