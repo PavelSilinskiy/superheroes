@@ -20,6 +20,10 @@ class MainBloc {
     _stateSubject.sink.add(nextState);
   }
 
+  void updateText(String text) {
+    print(text);
+  }
+
   void dispose() {
     _stateSubject.close();
   }

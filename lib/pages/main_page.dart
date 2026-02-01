@@ -68,15 +68,13 @@ class MainPageContent extends StatelessWidget {
 }
 
 class SearchWidget extends StatelessWidget {
-  const SearchWidget({
-    super.key,
-  });
+  const SearchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
-
+      onChanged: bloc.updateText,
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w400,
@@ -94,10 +92,11 @@ class SearchWidget extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: SuperheroesColors.enabledTextFieldBorder),
+          borderSide: BorderSide(
+            color: SuperheroesColors.enabledTextFieldBorder,
+          ),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-    
       ),
     );
   }
