@@ -58,7 +58,47 @@ class MainPageContent extends StatelessWidget {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
+          child: SearchWidget(),
+        ),
       ],
+    );
+  }
+}
+
+class SearchWidget extends StatelessWidget {
+  const SearchWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<MainBloc>(context, listen: false);
+    return TextField(
+
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w400,
+        color: SuperheroesColors.whiteText,
+      ),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: SuperheroesColors.searchBarBackground,
+        prefixIcon: Icon(
+          Icons.search,
+          color: SuperheroesColors.enabledSearchText,
+          size: 24,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: SuperheroesColors.enabledTextFieldBorder),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+    
+      ),
     );
   }
 }
