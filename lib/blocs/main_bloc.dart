@@ -29,6 +29,55 @@ class MainBloc {
   }
 }
 
+class SuperHeroInfo {
+  final String name;
+  final String realName;
+  final String imageURL;
+
+  const SuperHeroInfo({
+    required this.name,
+    required this.realName,
+    required this.imageURL,
+  });
+
+  @override
+  String toString() {
+    return 'SuperHeroInfo{name: $name, realName: $realName, imageURL: $imageURL}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return (identical(this, other) ||
+        other is SuperHeroInfo &&
+            runtimeType == other.runtimeType &&
+            name == other.name &&
+            realName == other.realName &&
+            imageURL == other.imageURL);
+  }
+
+  @override
+  int get hashCode => name.hashCode ^ realName.hashCode ^ imageURL.hashCode;
+
+  static const mocked = [
+    SuperHeroInfo(
+      name: 'Batman',
+      realName: 'Bruce Wayne',
+      imageURL:
+          'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+    ),
+    SuperHeroInfo(
+      name: 'Ironman',
+      realName: 'Tony Stark',
+      imageURL: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
+    ),
+    SuperHeroInfo(
+      name: 'Venom',
+      realName: 'Eddie Brock',
+      imageURL: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
+    ),
+  ];
+}
+
 enum MainPageState {
   noFavorites,
   minSymbols,
