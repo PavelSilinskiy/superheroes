@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
@@ -67,14 +68,32 @@ class MainPageContent extends StatelessWidget {
   }
 }
 
-class SearchWidget extends StatelessWidget {
+class SearchWidget extends StatefulWidget {
   const SearchWidget({super.key});
+
+  @override
+  State<SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
+  final TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      final bloc = Provider.of<MainBloc>(context, listen: false);
+      controller.addListener(() {bloc.updateText(controller.text);});
+    });
+
+    
+  }
 
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return TextField(
-      
+      controller: controller,
       onChanged: bloc.updateText,
       style: TextStyle(
         fontSize: 20,
@@ -91,7 +110,9 @@ class SearchWidget extends StatelessWidget {
           size: 24,
         ),
         suffix: GestureDetector(
-          onTap: () {print('clear');},
+          onTap: () {
+            controller.clear();
+          },
           child: Icon(
             Icons.clear,
             color: SuperheroesColors.whiteText,
