@@ -3,10 +3,29 @@ import 'dart:async';
 import 'package:rxdart/subjects.dart';
 
 class MainBloc {
+  static const minSymbols = 3;
   final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
+  final BehaviorSubject<List<SuperHeroInfo>> _favoritesInfoSubject =
+      BehaviorSubject.seeded(SuperHeroInfo.mocked);
+  final BehaviorSubject<List<SuperHeroInfo>> _searchedInfoSubject =
+      BehaviorSubject();
+  final BehaviorSubject<String> _currentTextSubject = BehaviorSubject.seeded(
+    '',
+  );
+
+  StreamSubscription? _searchTextSubscription;
 
   MainBloc() {
     _stateSubject.sink.add(MainPageState.noFavorites);
+    _searchTextSubscription = _currentTextSubject.listen((text) {
+      if (text.isEmpty) {
+        _stateSubject.add(MainPageState.favorites);
+      } else if (text.length < minSymbols) {
+        _stateSubject.add(MainPageState.minSymbols);
+      } else {
+        searchForSuperheroes(text);
+      }
+    });
   }
 
   Stream<MainPageState> observeMainPageState() {
@@ -21,12 +40,18 @@ class MainBloc {
   }
 
   void updateText(String text) {
-    print(text);
+    _currentTextSubject.add(text);
   }
 
   void dispose() {
+    _searchTextSubscription?.cancel();
     _stateSubject.close();
+    _favoritesInfoSubject.close();
+    _searchedInfoSubject.close();
+    _currentTextSubject.close();
   }
+
+  void searchForSuperheroes(String text) {}
 }
 
 class SuperHeroInfo {
