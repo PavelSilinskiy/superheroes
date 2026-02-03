@@ -5,19 +5,21 @@ import 'package:rxdart/subjects.dart';
 class MainBloc {
   static const minSymbols = 3;
   final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
-  final BehaviorSubject<List<SuperHeroInfo>> _favoritesInfoSubject =
-      BehaviorSubject.seeded(SuperHeroInfo.mocked);
-  final BehaviorSubject<List<SuperHeroInfo>> _searchedInfoSubject =
+  final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
+      BehaviorSubject.seeded(SuperheroInfo.mocked);
+  final BehaviorSubject<List<SuperheroInfo>> _searchedInfoSubject =
       BehaviorSubject();
   final BehaviorSubject<String> _currentTextSubject = BehaviorSubject.seeded(
     '',
   );
 
-  StreamSubscription? _searchTextSubscription;
+  StreamSubscription? _currentTextSubscription;
+
+  StreamSubscription? _searchSubscription;
 
   MainBloc() {
     _stateSubject.sink.add(MainPageState.noFavorites);
-    _searchTextSubscription = _currentTextSubject.listen((text) {
+    _currentTextSubscription = _currentTextSubject.listen((text) {
       if (text.isEmpty) {
         _stateSubject.add(MainPageState.favorites);
       } else if (text.length < minSymbols) {
@@ -44,22 +46,42 @@ class MainBloc {
   }
 
   void dispose() {
-    _searchTextSubscription?.cancel();
+    _currentTextSubscription?.cancel();
     _stateSubject.close();
     _favoritesInfoSubject.close();
     _searchedInfoSubject.close();
     _currentTextSubject.close();
   }
 
-  void searchForSuperheroes(String text) {}
+  void searchForSuperheroes(String text) {
+    _stateSubject.add(MainPageState.loading);
+    _searchSubscription?.cancel();
+    _searchSubscription = search(text).asStream().listen(
+      (searchResults) {
+        if (searchResults.isEmpty) {
+          _stateSubject.add(MainPageState.nothingFound);
+        } else {
+          _searchedInfoSubject.add(searchResults);
+          _stateSubject.add(MainPageState.searchResults);
+        }
+      },
+      onError: (error, stackTrace) {
+        _stateSubject.add(MainPageState.loadingError);
+      },
+    );
+  }
+
+  Future<List<SuperheroInfo>> search(String query) async {
+    return [];
+  }
 }
 
-class SuperHeroInfo {
+class SuperheroInfo {
   final String name;
   final String realName;
   final String imageURL;
 
-  const SuperHeroInfo({
+  const SuperheroInfo({
     required this.name,
     required this.realName,
     required this.imageURL,
@@ -73,7 +95,7 @@ class SuperHeroInfo {
   @override
   bool operator ==(Object other) {
     return (identical(this, other) ||
-        other is SuperHeroInfo &&
+        other is SuperheroInfo &&
             runtimeType == other.runtimeType &&
             name == other.name &&
             realName == other.realName &&
@@ -84,18 +106,18 @@ class SuperHeroInfo {
   int get hashCode => name.hashCode ^ realName.hashCode ^ imageURL.hashCode;
 
   static const mocked = [
-    SuperHeroInfo(
+    SuperheroInfo(
       name: 'Batman',
       realName: 'Bruce Wayne',
       imageURL:
           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
     ),
-    SuperHeroInfo(
+    SuperheroInfo(
       name: 'Ironman',
       realName: 'Tony Stark',
       imageURL: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
     ),
-    SuperHeroInfo(
+    SuperheroInfo(
       name: 'Venom',
       realName: 'Eddie Brock',
       imageURL: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
