@@ -289,6 +289,7 @@ class SuperheroList extends StatelessWidget {
           return const SizedBox.shrink();
         } else {
           return ListView.separated(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemCount: snapshot.data!.length + 1,
             itemBuilder: (context, i) {
               if (i == 0) {
