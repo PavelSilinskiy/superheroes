@@ -232,60 +232,13 @@ class FavoritesStateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 90),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            textAlign: TextAlign.left,
-            'Your favorites',
-            style: TextStyle(
-              color: SuperheroesColors.whiteText,
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-        SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: SuperheroCard(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: 'Batman'),
+    final bloc = Provider.of<MainBloc>(context, listen: false);
+    return Padding(
+      padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
+      child: SuperheroList(
+        title: 'Your favorites',
+        stream: bloc.observeSearchedSuperheroes(),
                 ),
-              );
-            },
-            imageUrl:
-                'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
-            name: 'Batman',
-            realName: 'Bruce Wayne',
-          ),
-        ),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: SuperheroCard(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: 'Ironman'),
-                ),
-              );
-            },
-            imageUrl:
-                'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
-            name: 'Ironman',
-            realName: 'Tony Stark',
-          ),
-        ),
-      ],
     );
   }
 }
