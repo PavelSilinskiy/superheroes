@@ -233,7 +233,7 @@ class FavoritesStateScreen extends StatelessWidget {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
-      child: SuperheroList(
+      child: SuperheroesList(
         title: 'Your favorites',
         stream: bloc.observeFavorites(),
       ),
@@ -249,7 +249,7 @@ class SearchResultsStateScreen extends StatelessWidget {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
-      child: SuperheroList(
+      child: SuperheroesList(
         title: 'Search results',
         stream: bloc.observeSearchedSuperheroes(),
       ),
@@ -275,11 +275,11 @@ class LoadingIndicator extends StatelessWidget {
   }
 }
 
-class SuperheroList extends StatelessWidget {
+class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
 
-  const SuperheroList({super.key, required this.title, required this.stream});
+  const SuperheroesList({super.key, required this.title, required this.stream});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<SuperheroInfo>>(
