@@ -203,8 +203,6 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 }
 
-
-
 class MinSymbolsStateScreen extends StatelessWidget {
   const MinSymbolsStateScreen({super.key});
 
@@ -238,7 +236,7 @@ class FavoritesStateScreen extends StatelessWidget {
       child: SuperheroList(
         title: 'Your favorites',
         stream: bloc.observeSearchedSuperheroes(),
-                ),
+      ),
     );
   }
 }
@@ -249,9 +247,12 @@ class SearchResultsStateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
-    return SuperheroList(
-      title: 'Search results',
-      stream: bloc.observeSearchedSuperheroes(),
+    return Padding(
+      padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
+      child: SuperheroList(
+        title: 'Search results',
+        stream: bloc.observeSearchedSuperheroes(),
+      ),
     );
   }
 }
@@ -287,12 +288,12 @@ class SuperheroList extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data == null) {
           return const SizedBox.shrink();
         } else {
-          return ListView.builder(
+          return ListView.separated(
             itemCount: snapshot.data!.length + 1,
             itemBuilder: (context, i) {
               if (i == 0) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.only(bottom: 12.0),
                   child: Text(
                     textAlign: TextAlign.left,
                     title,
@@ -320,6 +321,7 @@ class SuperheroList extends StatelessWidget {
                 );
               }
             },
+            separatorBuilder: (context, index) => SizedBox(height: 8),
           );
         }
       },
