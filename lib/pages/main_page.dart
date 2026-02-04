@@ -68,71 +68,6 @@ class MainPageContent extends StatelessWidget {
   }
 }
 
-class SearchWidget extends StatefulWidget {
-  const SearchWidget({super.key});
-
-  @override
-  State<SearchWidget> createState() => _SearchWidgetState();
-}
-
-class _SearchWidgetState extends State<SearchWidget> {
-  final TextEditingController controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      final bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() {
-        bloc.updateText(controller.text);
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<MainBloc>(context, listen: false);
-    return TextField(
-      controller: controller,
-      onChanged: bloc.updateText,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w400,
-        color: SuperheroesColors.whiteText,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: SuperheroesColors.searchBarBackground,
-        prefixIcon: Icon(
-          Icons.search,
-          color: SuperheroesColors.enabledSearchText,
-          size: 24,
-        ),
-        suffix: GestureDetector(
-          onTap: () {
-            controller.clear();
-          },
-          child: Icon(
-            Icons.clear,
-            color: SuperheroesColors.whiteText,
-            size: 24,
-          ),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: SuperheroesColors.enabledTextFieldBorder,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-      ),
-    );
-  }
-}
-
 class MainPageStateWidget extends StatelessWidget {
   const MainPageStateWidget({super.key});
 
@@ -202,6 +137,73 @@ class MainPageStateWidget extends StatelessWidget {
     );
   }
 }
+
+class SearchWidget extends StatefulWidget {
+  const SearchWidget({super.key});
+
+  @override
+  State<SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
+  final TextEditingController controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      final bloc = Provider.of<MainBloc>(context, listen: false);
+      controller.addListener(() {
+        bloc.updateText(controller.text);
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<MainBloc>(context, listen: false);
+    return TextField(
+      controller: controller,
+      onChanged: bloc.updateText,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w400,
+        color: SuperheroesColors.whiteText,
+      ),
+      decoration: InputDecoration(
+        isDense: true,
+        filled: true,
+        fillColor: SuperheroesColors.searchBarBackground,
+        prefixIcon: Icon(
+          Icons.search,
+          color: SuperheroesColors.enabledSearchText,
+          size: 24,
+        ),
+        suffix: GestureDetector(
+          onTap: () {
+            controller.clear();
+          },
+          child: Icon(
+            Icons.clear,
+            color: SuperheroesColors.whiteText,
+            size: 24,
+          ),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: SuperheroesColors.enabledTextFieldBorder,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 class MinSymbolsStateScreen extends StatelessWidget {
   const MinSymbolsStateScreen({super.key});
