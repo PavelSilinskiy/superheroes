@@ -83,10 +83,10 @@ class _SearchWidgetState extends State<SearchWidget> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       final bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() {bloc.updateText(controller.text);});
+      controller.addListener(() {
+        bloc.updateText(controller.text);
+      });
     });
-
-    
   }
 
   @override
@@ -293,60 +293,10 @@ class SearchResultsStateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 90),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            textAlign: TextAlign.left,
-            'Search results',
-            style: TextStyle(
-              color: SuperheroesColors.whiteText,
-              fontSize: 24,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
-        SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: SuperheroCard(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: 'Batman'),
-                ),
-              );
-            },
-            imageUrl:
-                'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
-            name: 'Batman',
-            realName: 'Bruce Wayne',
-          ),
-        ),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: SuperheroCard(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SuperheroPage(name: 'Venom'),
-                ),
-              );
-            },
-            imageUrl:
-                'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
-            name: 'Venom',
-            realName: 'Eddie Brock',
-          ),
-        ),
-      ],
+    final bloc = Provider.of<MainBloc>(context, listen: false);
+    return SuperheroList(
+      title: 'Search results',
+      stream: bloc.observeSearchedSuperheroes(),
     );
   }
 }
@@ -365,6 +315,59 @@ class LoadingIndicator extends StatelessWidget {
           strokeWidth: 4,
         ),
       ),
+    );
+  }
+}
+
+class SuperheroList extends StatelessWidget {
+  final String title;
+  final Stream<List<SuperheroInfo>> stream;
+
+  const SuperheroList({super.key, required this.title, required this.stream});
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<SuperheroInfo>>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox.shrink();
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data!.length + 1,
+            itemBuilder: (context, i) {
+              if (i == 0) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    textAlign: TextAlign.left,
+                    title,
+                    style: TextStyle(
+                      color: SuperheroesColors.whiteText,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                );
+              } else {
+                final item = snapshot.data![i - 1];
+                return SuperheroCard(
+                  name: item.name,
+                  realName: item.realName,
+                  imageUrl: item.imageURL,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SuperheroPage(name: item.name),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+          );
+        }
+      },
     );
   }
 }

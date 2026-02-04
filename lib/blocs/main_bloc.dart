@@ -20,6 +20,7 @@ class MainBloc {
   MainBloc() {
     _stateSubject.sink.add(MainPageState.noFavorites);
     _currentTextSubscription = _currentTextSubject.listen((text) {
+      _searchSubscription?.cancel();
       if (text.isEmpty) {
         _stateSubject.add(MainPageState.favorites);
       } else if (text.length < minSymbols) {
@@ -53,6 +54,10 @@ class MainBloc {
     _currentTextSubject.close();
   }
 
+  Stream<List<SuperheroInfo>> observeSearchedSuperheroes() {
+    return _searchedInfoSubject;
+  }
+
   void searchForSuperheroes(String text) {
     _stateSubject.add(MainPageState.loading);
     _searchSubscription?.cancel();
@@ -72,7 +77,8 @@ class MainBloc {
   }
 
   Future<List<SuperheroInfo>> search(String query) async {
-    return [];
+    await Future.delayed(Duration(seconds: 1));
+    return SuperheroInfo.mocked;
   }
 }
 
