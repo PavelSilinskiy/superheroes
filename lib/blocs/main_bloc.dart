@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
 class MainBloc {
@@ -65,19 +66,23 @@ class MainBloc {
   void searchForSuperheroes(String text) {
     _stateSubject.add(MainPageState.loading);
     _searchSubscription?.cancel();
-    _searchSubscription = search(text).asStream().listen(
-      (searchResults) {
-        if (searchResults.isEmpty) {
-          _stateSubject.add(MainPageState.nothingFound);
-        } else {
-          _searchedInfoSubject.add(searchResults);
-          _stateSubject.add(MainPageState.searchResults);
-        }
-      },
-      onError: (error, stackTrace) {
-        _stateSubject.add(MainPageState.loadingError);
-      },
-    );
+    _searchSubscription = search(text)
+        .asStream()
+        .distinct()
+        .debounceTime(Duration(milliseconds: 500))
+        .listen(
+          (searchResults) {
+            if (searchResults.isEmpty) {
+              _stateSubject.add(MainPageState.nothingFound);
+            } else {
+              _searchedInfoSubject.add(searchResults);
+              _stateSubject.add(MainPageState.searchResults);
+            }
+          },
+          onError: (error, stackTrace) {
+            _stateSubject.add(MainPageState.loadingError);
+          },
+        );
   }
 
   Future<List<SuperheroInfo>> search(String query) async {
