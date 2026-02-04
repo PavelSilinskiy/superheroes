@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:superheroes/pages/main_page.dart';
 
 class MainBloc {
   static const minSymbols = 3;
   final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
+  // final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
+  //     BehaviorSubject.seeded(SuperheroInfo.mocked);
   final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
-      BehaviorSubject.seeded(SuperheroInfo.mocked);
+      BehaviorSubject.seeded([]);
   final BehaviorSubject<List<SuperheroInfo>> _searchedInfoSubject =
       BehaviorSubject();
   final BehaviorSubject<String> _currentTextSubject = BehaviorSubject.seeded(
@@ -20,16 +23,32 @@ class MainBloc {
 
   MainBloc() {
     _stateSubject.sink.add(MainPageState.noFavorites);
-    _currentTextSubscription = _currentTextSubject.listen((text) {
-      _searchSubscription?.cancel();
-      if (text.isEmpty) {
-        _stateSubject.add(MainPageState.favorites);
-      } else if (text.length < minSymbols) {
-        _stateSubject.add(MainPageState.minSymbols);
-      } else {
-        searchForSuperheroes(text);
-      }
-    });
+    _currentTextSubscription =
+        Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+          _currentTextSubject.distinct().debounceTime(
+            Duration(milliseconds: 500),
+          ),
+          _favoritesInfoSubject,
+          (searchText, favorites) {
+            return MainPageStateInfo(
+              searchText: searchText,
+              haveFavorites: favorites.isNotEmpty,
+            );
+          },
+        ).listen((value) {
+          _searchSubscription?.cancel();
+          if (value.searchText.isEmpty) {
+            if (value.haveFavorites) {
+              _stateSubject.add(MainPageState.favorites);
+            } else {
+              _stateSubject.add(MainPageState.noFavorites);
+            }
+          } else if (value.searchText.length < minSymbols) {
+            _stateSubject.add(MainPageState.minSymbols);
+          } else {
+            searchForSuperheroes(value.searchText);
+          }
+        });
   }
 
   Stream<MainPageState> observeMainPageState() {
@@ -66,23 +85,19 @@ class MainBloc {
   void searchForSuperheroes(String text) {
     _stateSubject.add(MainPageState.loading);
     _searchSubscription?.cancel();
-    _searchSubscription = search(text)
-        .asStream()
-        .distinct()
-        .debounceTime(Duration(milliseconds: 500))
-        .listen(
-          (searchResults) {
-            if (searchResults.isEmpty) {
-              _stateSubject.add(MainPageState.nothingFound);
-            } else {
-              _searchedInfoSubject.add(searchResults);
-              _stateSubject.add(MainPageState.searchResults);
-            }
-          },
-          onError: (error, stackTrace) {
-            _stateSubject.add(MainPageState.loadingError);
-          },
-        );
+    _searchSubscription = search(text).asStream().listen(
+      (searchResults) {
+        if (searchResults.isEmpty) {
+          _stateSubject.add(MainPageState.nothingFound);
+        } else {
+          _searchedInfoSubject.add(searchResults);
+          _stateSubject.add(MainPageState.searchResults);
+        }
+      },
+      onError: (error, stackTrace) {
+        _stateSubject.add(MainPageState.loadingError);
+      },
+    );
   }
 
   Future<List<SuperheroInfo>> search(String query) async {
@@ -148,4 +163,31 @@ enum MainPageState {
   loadingError,
   searchResults,
   favorites,
+}
+
+class MainPageStateInfo {
+  final String searchText;
+  final bool haveFavorites;
+
+  const MainPageStateInfo({
+    required this.searchText,
+    required this.haveFavorites,
+  });
+
+  @override
+  bool operator ==(Object other) {
+    return (identical(this, other) ||
+        other is MainPageStateInfo &&
+            runtimeType == other.runtimeType &&
+            searchText == other.searchText &&
+            haveFavorites == other.haveFavorites);
+  }
+
+  @override
+  int get hashCode => searchText.hashCode ^ haveFavorites.hashCode;
+
+  @override
+  String toString() {
+    return 'MainPageStateInfo{searchText: $searchText, haveFavorites: $haveFavorites}';
+  }
 }
