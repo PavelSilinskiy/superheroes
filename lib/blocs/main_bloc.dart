@@ -109,17 +109,17 @@ class MainBloc {
 class SuperheroInfo {
   final String name;
   final String realName;
-  final String imageURL;
+  final String imageUrl;
 
   const SuperheroInfo({
     required this.name,
     required this.realName,
-    required this.imageURL,
+    required this.imageUrl,
   });
 
   @override
   String toString() {
-    return 'SuperHeroInfo{name: $name, realName: $realName, imageURL: $imageURL}';
+    return 'SuperHeroInfo{name: $name, realName: $realName, imageUrl: $imageUrl}';
   }
 
   @override
@@ -129,28 +129,28 @@ class SuperheroInfo {
             runtimeType == other.runtimeType &&
             name == other.name &&
             realName == other.realName &&
-            imageURL == other.imageURL);
+            imageUrl == other.imageUrl);
   }
 
   @override
-  int get hashCode => name.hashCode ^ realName.hashCode ^ imageURL.hashCode;
+  int get hashCode => name.hashCode ^ realName.hashCode ^ imageUrl.hashCode;
 
   static const mocked = [
     SuperheroInfo(
       name: 'Batman',
       realName: 'Bruce Wayne',
-      imageURL:
+      imageUrl:
           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
     ),
     SuperheroInfo(
       name: 'Ironman',
       realName: 'Tony Stark',
-      imageURL: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
+      imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
     ),
     SuperheroInfo(
       name: 'Venom',
       realName: 'Eddie Brock',
-      imageURL: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
+      imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
     ),
   ];
 }

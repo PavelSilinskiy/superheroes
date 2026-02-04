@@ -308,9 +308,7 @@ class SuperheroesList extends StatelessWidget {
               } else {
                 final item = snapshot.data![i - 1];
                 return SuperheroCard(
-                  name: item.name,
-                  realName: item.realName,
-                  imageUrl: item.imageURL,
+                  superheroInfo: item,
                   onTap: () {
                     Navigator.push(
                       context,
