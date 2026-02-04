@@ -35,6 +35,10 @@ class MainBloc {
     return _stateSubject;
   }
 
+  Stream<List<SuperheroInfo>> observeFavorites() {
+    return _favoritesInfoSubject;
+  }
+
   void nextState() {
     final currentState = _stateSubject.value;
     final nextState = MainPageState

@@ -235,7 +235,7 @@ class FavoritesStateScreen extends StatelessWidget {
       padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
       child: SuperheroList(
         title: 'Your favorites',
-        stream: bloc.observeSearchedSuperheroes(),
+        stream: bloc.observeFavorites(),
       ),
     );
   }
