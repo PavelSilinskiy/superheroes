@@ -20,7 +20,11 @@ class SuperheroCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 70,
-        color: SuperheroesColors.cardColor,
+        decoration: BoxDecoration(
+          color: SuperheroesColors.cardColor,
+          borderRadius: BorderRadius.circular(8),         
+        ),
+        clipBehavior: Clip.antiAlias,
         child: Row(
           children: [
             Image.network(imageUrl, width: 70, height: 70, fit: BoxFit.cover),
@@ -37,7 +41,6 @@ class SuperheroCard extends StatelessWidget {
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                     ),
-                    
                   ),
                   Text(
                     realName,
@@ -46,7 +49,6 @@ class SuperheroCard extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
-                    
                   ),
                 ],
               ),
