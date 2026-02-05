@@ -170,6 +170,10 @@ class _SearchWidgetState extends State<SearchWidget> {
         fontWeight: FontWeight.w400,
         color: SuperheroesColors.whiteText,
       ),
+      cursorColor: SuperheroesColors.focusedSearchText,
+      textInputAction: TextInputAction.search,
+      textCapitalization: TextCapitalization.words, 
+      //keyboardType: TextInputType.webSearch,
       decoration: InputDecoration(
         isDense: true,
         filled: true,
@@ -195,6 +199,13 @@ class _SearchWidgetState extends State<SearchWidget> {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: SuperheroesColors.enabledTextFieldBorder,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: SuperheroesColors.focusedSearchText,
+            width: 2,
           ),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),

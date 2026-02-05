@@ -10,5 +10,6 @@ class SuperheroesColors {
   static const Color searchBarBackground = Color(0xBF2C3243);
   static const Color enabledSearchText = Colors.white54;
   static const Color enabledTextFieldBorder = Color(0x3DFFFFFF);
+  static const Color focusedSearchText = Colors.white;
 
 }
