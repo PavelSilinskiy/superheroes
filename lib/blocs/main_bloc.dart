@@ -102,7 +102,12 @@ class MainBloc {
 
   Future<List<SuperheroInfo>> search(String query) async {
     await Future.delayed(Duration(seconds: 1));
-    return SuperheroInfo.mocked;
+    return SuperheroInfo.mocked
+        .where(
+          (element) =>
+              (element.name.toLowerCase().contains(query.toLowerCase())),
+        )
+        .toList();
   }
 }
 
