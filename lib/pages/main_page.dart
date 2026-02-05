@@ -45,20 +45,20 @@ class MainPageContent extends StatelessWidget {
     return Stack(
       children: [
         Center(child: MainPageStateWidget()),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: GestureDetector(
-            onTap: () {
-              bloc.nextState();
-            },
-            child: ActionButton(
-              text: "Next state".toUpperCase(),
-              onPressed: () {
-                bloc.nextState();
-              },
-            ),
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.bottomCenter,
+        //   child: GestureDetector(
+        //     onTap: () {
+        //       bloc.nextState();
+        //     },
+        //     child: ActionButton(
+        //       text: "Next state".toUpperCase(),
+        //       onPressed: () {
+        //         bloc.nextState();
+        //       },
+        //     ),
+        //   ),
+        // ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
           child: SearchWidget(),
@@ -83,14 +83,25 @@ class MainPageStateWidget extends StatelessWidget {
           final state = snapshot.data!;
           switch (state) {
             case MainPageState.noFavorites:
-              return InfoWithButton(
-                title: 'No favorites yet',
-                subtitle: 'Search and add',
-                buttonText: 'Search',
-                assetImage: 'assets/images/ironman.png',
-                imageHeight: 119,
-                imageWidth: 108,
-                imageTopPudding: 9,
+              return Stack(
+                children: [
+                  InfoWithButton(
+                    title: 'No favorites yet',
+                    subtitle: 'Search and add',
+                    buttonText: 'Search',
+                    assetImage: 'assets/images/ironman.png',
+                    imageHeight: 119,
+                    imageWidth: 108,
+                    imageTopPudding: 9,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ActionButton(
+                      text: 'Remove',
+                      onPressed: bloc.removeFavorite,
+                    ),
+                  ),
+                ],
               );
 
             case MainPageState.minSymbols:
@@ -163,7 +174,9 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return StreamBuilder(
-      stream: bloc.observeCurrentText().distinct((a, b) => a.isEmpty == b.isEmpty),
+      stream: bloc.observeCurrentText().distinct(
+        (a, b) => a.isEmpty == b.isEmpty,
+      ),
       builder: (context, asyncSnapshot) {
         return TextField(
           controller: controller,
@@ -256,12 +269,20 @@ class FavoritesStateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
-    return Padding(
-      padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
-      child: SuperheroesList(
-        title: 'Your favorites',
-        stream: bloc.observeFavorites(),
-      ),
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
+          child: SuperheroesList(
+            title: 'Your favorites',
+            stream: bloc.observeFavorites(),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ActionButton(text: 'Remove', onPressed: bloc.removeFavorite),
+        ),
+      ],
     );
   }
 }

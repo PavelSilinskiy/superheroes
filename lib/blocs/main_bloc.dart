@@ -10,7 +10,7 @@ class MainBloc {
   // final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
   //     BehaviorSubject.seeded(SuperheroInfo.mocked);
   final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
-      BehaviorSubject.seeded([]);
+      BehaviorSubject.seeded(SuperheroInfo.mocked);
   final BehaviorSubject<List<SuperheroInfo>> _searchedInfoSubject =
       BehaviorSubject();
   final BehaviorSubject<String> _currentTextSubject = BehaviorSubject.seeded(
@@ -71,6 +71,15 @@ class MainBloc {
 
   void updateText(String text) {
     _currentTextSubject.add(text);
+  }
+
+  void removeFavorite() {
+    var currentList = _favoritesInfoSubject.value;
+    if (currentList.isEmpty) {
+      _favoritesInfoSubject.add(SuperheroInfo.mocked);
+    } else {
+      _favoritesInfoSubject.add(currentList.sublist(0, currentList.length - 1));
+    }
   }
 
   void dispose() {
