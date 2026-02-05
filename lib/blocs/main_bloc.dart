@@ -50,6 +50,9 @@ class MainBloc {
           }
         });
   }
+  Stream<String> observeCurrentText() {
+    return _currentTextSubject;
+  }
 
   Stream<MainPageState> observeMainPageState() {
     return _stateSubject;

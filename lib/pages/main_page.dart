@@ -162,54 +162,68 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
-    return TextField(
-      controller: controller,
-      onChanged: bloc.updateText,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w400,
-        color: SuperheroesColors.whiteText,
-      ),
-      cursorColor: SuperheroesColors.focusedSearchText,
-      textInputAction: TextInputAction.search,
-      textCapitalization: TextCapitalization.words, 
-      //keyboardType: TextInputType.webSearch,
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: SuperheroesColors.searchBarBackground,
-        prefixIcon: Icon(
-          Icons.search,
-          color: SuperheroesColors.enabledSearchText,
-          size: 24,
-        ),
-        suffix: GestureDetector(
-          onTap: () {
-            controller.clear();
-          },
-          child: Icon(
-            Icons.clear,
+    return StreamBuilder(
+      stream: bloc.observeCurrentText().distinct((a, b) => a.isEmpty == b.isEmpty),
+      builder: (context, asyncSnapshot) {
+        return TextField(
+          controller: controller,
+          onChanged: bloc.updateText,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
             color: SuperheroesColors.whiteText,
-            size: 24,
           ),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: SuperheroesColors.enabledTextFieldBorder,
+          cursorColor: SuperheroesColors.focusedSearchText,
+          textInputAction: TextInputAction.search,
+          textCapitalization: TextCapitalization.words,
+          //keyboardType: TextInputType.webSearch,
+          decoration: InputDecoration(
+            isDense: true,
+            filled: true,
+            fillColor: SuperheroesColors.searchBarBackground,
+            prefixIcon: Icon(
+              Icons.search,
+              color: SuperheroesColors.enabledSearchText,
+              size: 24,
+            ),
+            suffix: GestureDetector(
+              onTap: () {
+                controller.clear();
+              },
+              child: Icon(
+                Icons.clear,
+                color: SuperheroesColors.whiteText,
+                size: 24,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            enabledBorder:
+                (asyncSnapshot.data != null && asyncSnapshot.data!.isNotEmpty)
+                ? OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: SuperheroesColors.focusedSearchText,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  )
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: SuperheroesColors.enabledTextFieldBorder,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: SuperheroesColors.focusedSearchText,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
           ),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: SuperheroesColors.focusedSearchText,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-      ),
+        );
+      },
     );
   }
 }
