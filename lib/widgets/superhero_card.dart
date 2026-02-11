@@ -19,12 +19,22 @@ class SuperheroCard extends StatelessWidget {
         height: 70,
         decoration: BoxDecoration(
           color: SuperheroesColors.cardColor,
-          borderRadius: BorderRadius.circular(8),         
+          borderRadius: BorderRadius.circular(8),
         ),
         clipBehavior: Clip.antiAlias,
         child: Row(
           children: [
-            Image.network(superheroInfo.imageUrl, width: 70, height: 70, fit: BoxFit.cover),
+            Image.network(
+              superheroInfo.imageUrl,
+              //headers: {'User-Agent': 'PostmanRuntime/7.39.1'},
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                'Referer': 'https://www.superherodb.com/',
+              },
+              width: 70,
+              height: 70,
+              fit: BoxFit.cover,
+            ),
             SizedBox(width: 12),
             Expanded(
               child: Column(
