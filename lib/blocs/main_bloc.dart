@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:superheroes/pages/main_page.dart';
+import 'package:http/http.dart' as http;
 
 class MainBloc {
   static const minSymbols = 3;
@@ -114,6 +115,7 @@ class MainBloc {
 
   Future<List<SuperheroInfo>> search(String query) async {
     await Future.delayed(Duration(seconds: 1));
+    final response = await http.get(Uri.parse('https://www.superherodb.com/pictures2/portraits/10/100/639.jpg'));
     return SuperheroInfo.mocked
         .where(
           (element) =>
