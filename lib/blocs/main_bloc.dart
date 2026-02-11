@@ -7,6 +7,8 @@ import 'package:rxdart/subjects.dart';
 import 'package:superheroes/pages/main_page.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/superhero.dart';
+
 class MainBloc {
   static const minSymbols = 3;
   final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
@@ -125,12 +127,15 @@ class MainBloc {
     //print(decoded);
     if (decoded['response'] == 'success') {
       final List<dynamic> results = decoded['results'];
-      final List<SuperheroInfo> found = results
+      final List<Superhero> superheroes = results
+          .map((result) => Superhero.fromJson(result))
+          .toList();
+      final List<SuperheroInfo> found = superheroes
           .map(
-            (result) => SuperheroInfo(
-              name: result['name'],
-              realName: result['biography']['full-name'],
-              imageUrl: result['image']['url'],
+            (superhero) => SuperheroInfo(
+              name: superhero.name,
+              realName: superhero.biography.fullName,
+              imageUrl: superhero.image.url,
             ),
           )
           .toList();
