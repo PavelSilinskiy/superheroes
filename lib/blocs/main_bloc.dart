@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:superheroes/pages/main_page.dart';
@@ -113,13 +114,15 @@ class MainBloc {
     );
   }
 
-  Future<List<SuperheroInfo>> search(String query) async {
+  Future<List<SuperheroInfo>> search(String text) async {
     await Future.delayed(Duration(seconds: 1));
-    final response = await http.get(Uri.parse('https://www.superherodb.com/pictures2/portraits/10/100/639.jpg'));
+    final token = dotenv.env["SUPERHERO_TOKEN"];
+    final response = await http.get(Uri.parse('https://superheroapi.com/api/$token/search/$text'));
+    print(response.body);
     return SuperheroInfo.mocked
         .where(
           (element) =>
-              (element.name.toLowerCase().contains(query.toLowerCase())),
+              (element.name.toLowerCase().contains(text.toLowerCase())),
         )
         .toList();
   }
