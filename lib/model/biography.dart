@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'biography.g.dart';
+
+@JsonSerializable(fieldRename: FieldRename.kebab)
 class Biography {
   final String fullName;
   final String alterEgos;
@@ -17,25 +22,7 @@ class Biography {
     required this.alignment,
   });
 
-  factory Biography.fromJson(Map<String, dynamic> json) {
-    return Biography(
-      fullName: json['full-name'] ?? '',
-      alterEgos: json['alter-egos'] ?? '',
-      aliases: List<String>.from(json['aliases'] ?? []),
-      placeOfBirth: json['place-of-birth'] ?? '',
-      firstAppearance: json['first-appearance'] ?? '',
-      publisher: json['publisher'] ?? '',
-      alignment: json['alignment'] ?? '',
-    );
-  }
+  factory Biography.fromJson(Map<String, dynamic> json) => _$BiographyFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'full-name': fullName,
-        'alter-egos': alterEgos,
-        'aliases': aliases,
-        'place-of-birth': placeOfBirth,
-        'first-appearance': firstAppearance,
-        'publisher': publisher,
-        'alignment': alignment,
-      };
+  Map<String, dynamic> toJson() => _$BiographyToJson(this);
 }

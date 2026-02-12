@@ -1,6 +1,12 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'biography.dart';
 import 'server_image.dart';
 
+part 'superhero.g.dart';
+
+
+@JsonSerializable(fieldRename: FieldRename.kebab)
 class Superhero {
   final String id;
   final String name;
@@ -22,27 +28,7 @@ class Superhero {
     required this.image,
   });
 
-  factory Superhero.fromJson(Map<String, dynamic> json) {
-    return Superhero(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      //powerstats: PowerStats.fromJson(json['powerstats'] ?? {}),
-      biography: Biography.fromJson(json['biography'] ?? {}),
-      //appearance: Appearance.fromJson(json['appearance'] ?? {}),
-      //work: Work.fromJson(json['work'] ?? {}),
-      //connections: Connections.fromJson(json['connections'] ?? {}),
-      image: ServerImage.fromJson(json['image'] ?? {}),
-    );
-  }
+  factory Superhero.fromJson(Map<String, dynamic> json) => _$SuperheroFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        //'powerstats': powerstats.toJson(),
-        'biography': biography.toJson(),
-        //'appearance': appearance.toJson(),
-        //'work': work.toJson(),
-        //'connections': connections.toJson(),
-        'image': image.toJson(),
-      };
+  Map<String, dynamic> toJson() => _$SuperheroToJson(this);
 }
