@@ -11,6 +11,7 @@ import '../model/superhero.dart';
 
 class MainBloc {
   static const minSymbols = 3;
+  http.Client? client;
   final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
   // final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
   //     BehaviorSubject.seeded(SuperheroInfo.mocked);
@@ -26,7 +27,7 @@ class MainBloc {
 
   StreamSubscription? _searchSubscription;
 
-  MainBloc() {
+  MainBloc({this.client}) {
     _stateSubject.sink.add(MainPageState.noFavorites);
     _currentTextSubscription =
         Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
@@ -93,6 +94,7 @@ class MainBloc {
     _favoritesInfoSubject.close();
     _searchedInfoSubject.close();
     _currentTextSubject.close();
+    client?.close();
   }
 
   Stream<List<SuperheroInfo>> observeSearchedSuperheroes() {
@@ -120,7 +122,7 @@ class MainBloc {
   Future<List<SuperheroInfo>> search(String text) async {
     //await Future.delayed(Duration(seconds: 1));
     final token = dotenv.env["SUPERHERO_TOKEN"];
-    final response = await http.get(
+    final response = await (client ??= http.Client()).get(
       Uri.parse('https://superheroapi.com/api/$token/search/$text'),
     );
     final decoded = json.decode(response.body);
