@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
+import 'package:superheroes/resourses/superheroes_images.dart';
 
 class SuperheroCard extends StatelessWidget {
   final SuperheroInfo superheroInfo;
@@ -48,7 +49,13 @@ class SuperheroCard extends StatelessWidget {
                     ),
                   );
                 },
-                errorWidget: (context, url, error) => ErrorWidget(error),
+                errorWidget: (context, url, error) => Center(
+                  child: Image.asset(
+                    SuperheroesImages.unknownHero,
+                    height: 62,
+                    width: 20,
+                  ),
+                ),
                 //width: 70,
                 //height: 70,
                 fit: BoxFit.cover,
