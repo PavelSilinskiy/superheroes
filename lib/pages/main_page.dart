@@ -9,6 +9,8 @@ import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
+import '../resourses/superheroes_images.dart';
+
 class MainPage extends StatefulWidget {
   final http.Client? client;
   const MainPage({super.key, this.client});
@@ -92,7 +94,7 @@ class MainPageStateWidget extends StatelessWidget {
                     title: 'No favorites yet',
                     subtitle: 'Search and add',
                     buttonText: 'Search',
-                    assetImage: 'assets/images/ironman.png',
+                    assetImage: SuperheroesImages.ironman,
                     imageHeight: 119,
                     imageWidth: 108,
                     imageTopPudding: 9,
@@ -118,7 +120,7 @@ class MainPageStateWidget extends StatelessWidget {
                 title: 'Nothing found',
                 subtitle: 'Search for something else',
                 buttonText: 'Search',
-                assetImage: 'assets/images/hulk.png',
+                assetImage: SuperheroesImages.hulk,
                 imageHeight: 112,
                 imageWidth: 84,
                 imageTopPudding: 16,
@@ -129,7 +131,7 @@ class MainPageStateWidget extends StatelessWidget {
                 title: 'Error happened',
                 subtitle: 'Please, try again',
                 buttonText: 'Retry',
-                assetImage: 'assets/images/superman.png',
+                assetImage: SuperheroesImages.superman,
                 imageHeight: 106,
                 imageWidth: 126,
                 imageTopPudding: 24,
