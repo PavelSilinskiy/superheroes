@@ -25,16 +25,34 @@ class SuperheroCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Row(
           children: [
-            CachedNetworkImage(
-              imageUrl: superheroInfo.imageUrl,
-              httpHeaders: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-                'Referer': 'https://www.superherodb.com/',
-              },
-              errorWidget: (context, url, error) => ErrorWidget(error),
+            Container(
               width: 70,
               height: 70,
-              fit: BoxFit.cover,
+              color: SuperheroesColors.cardImageBackground,
+              child: CachedNetworkImage(
+                imageUrl: superheroInfo.imageUrl,
+                httpHeaders: {
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                  'Referer': 'https://www.superherodb.com/',
+                },
+                progressIndicatorBuilder: (context, url, progress) {
+                  return Center(
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        value: progress.progress,
+                        color: SuperheroesColors.foregroundColor,
+                      ),
+                    ),
+                  );
+                },
+                errorWidget: (context, url, error) => ErrorWidget(error),
+                //width: 70,
+                //height: 70,
+                fit: BoxFit.cover,
+              ),
             ),
             SizedBox(width: 12),
             Expanded(
