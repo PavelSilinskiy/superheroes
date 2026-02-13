@@ -49,13 +49,15 @@ class SuperheroCard extends StatelessWidget {
                     ),
                   );
                 },
-                errorWidget: (context, url, error) => Center(
-                  child: Image.asset(
-                    SuperheroesImages.unknownHero,
-                    height: 62,
-                    width: 20,
-                  ),
-                ),
+                errorWidget: (context, url, error) {
+                  return Center(
+                    child: Image.asset(
+                      SuperheroesImages.unknownHero,
+                      height: 62,
+                      width: 20,
+                    ),
+                  );
+                },
                 //width: 70,
                 //height: 70,
                 fit: BoxFit.cover,
