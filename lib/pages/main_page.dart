@@ -15,23 +15,32 @@ class MainPage extends StatefulWidget {
   final http.Client? client;
   const MainPage({super.key, this.client});
 
-
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
   late MainBloc bloc = MainBloc();
+  late FocusNode textFieldFocusNode;
 
   @override
   Widget build(BuildContext context) {
-    return Provider<MainBloc>.value(
-      value: bloc,
-      child: Scaffold(
-        backgroundColor: SuperheroesColors.background,
-        body: SafeArea(child: MainPageContent()),
+    return ListenableProvider<FocusNode>.value(
+      value: textFieldFocusNode,
+      child: Provider<MainBloc>.value(
+        value: bloc,
+        child: Scaffold(
+          backgroundColor: SuperheroesColors.background,
+          body: SafeArea(child: MainPageContent()),
+        ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    textFieldFocusNode = FocusNode();
   }
 
   @override
@@ -74,11 +83,18 @@ class MainPageContent extends StatelessWidget {
 }
 
 class MainPageStateWidget extends StatelessWidget {
-  const MainPageStateWidget({super.key});
+  MainPageStateWidget({super.key});
+
+  final focus = FocusNode();
+
+  void focusSearch() {
+    
+  }
 
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    var node = Provider.of<FocusNode>(context);
     return StreamBuilder<MainPageState>(
       stream: bloc.observeMainPageState(),
       builder: (context, snapshot) {
@@ -98,6 +114,7 @@ class MainPageStateWidget extends StatelessWidget {
                     imageHeight: 119,
                     imageWidth: 108,
                     imageTopPudding: 9,
+                    onTap: () {FocusScope.of(context).requestFocus(node);},
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -124,6 +141,7 @@ class MainPageStateWidget extends StatelessWidget {
                 imageHeight: 112,
                 imageWidth: 84,
                 imageTopPudding: 16,
+                onTap: () {FocusScope.of(context).requestFocus(node);},
               );
 
             case MainPageState.loadingError:
@@ -135,6 +153,7 @@ class MainPageStateWidget extends StatelessWidget {
                 imageHeight: 106,
                 imageWidth: 126,
                 imageTopPudding: 24,
+                onTap: () {},
               );
 
             case MainPageState.searchResults:
@@ -178,12 +197,14 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
+    final focusNode = Provider.of<FocusNode>(context);
     return StreamBuilder(
       stream: bloc.observeCurrentText().distinct(
         (a, b) => a.isEmpty == b.isEmpty,
       ),
       builder: (context, asyncSnapshot) {
         return TextField(
+          focusNode: focusNode,
           controller: controller,
           onChanged: bloc.updateText,
           style: TextStyle(

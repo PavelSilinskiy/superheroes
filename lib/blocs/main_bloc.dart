@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
@@ -12,6 +13,7 @@ import '../model/superhero.dart';
 
 class MainBloc {
   static const minSymbols = 3;
+  FocusNode textFieldFocus = FocusNode();
   http.Client? client;
   final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
   // final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
