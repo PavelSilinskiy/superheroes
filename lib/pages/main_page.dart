@@ -153,7 +153,7 @@ class MainPageStateWidget extends StatelessWidget {
                 imageHeight: 106,
                 imageWidth: 126,
                 imageTopPudding: 24,
-                onTap: () {},
+                onTap: bloc.retry,
               );
 
             case MainPageState.searchResults:

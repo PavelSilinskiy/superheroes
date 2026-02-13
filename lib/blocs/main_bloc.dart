@@ -71,6 +71,10 @@ class MainBloc {
     return _favoritesInfoSubject;
   }
 
+  void retry() {
+    searchForSuperheroes(_currentTextSubject.value);
+  }
+
   void nextState() {
     final currentState = _stateSubject.value;
     final nextState = MainPageState
@@ -125,6 +129,7 @@ class MainBloc {
   Future<List<SuperheroInfo>> search(String text) async {
     final token = dotenv.env["SUPERHERO_TOKEN"];
     final response = await (client ??= http.Client()).get(
+      //Uri.parse('https://superheroapi.com/api/fgbme/search/$text'),
       Uri.parse('https://superheroapi.com/api/$token/search/$text'),
     );
     if (400 <= response.statusCode && response.statusCode <= 499) {
