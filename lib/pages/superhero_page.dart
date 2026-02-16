@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
@@ -35,29 +37,50 @@ class SuperheroPage extends StatelessWidget {
     );
     return Scaffold(
       backgroundColor: SuperheroesColors.background,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: Text(
-                superhero.name,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: SuperheroesColors.whiteText,
-                ),
-              ),
-            ),
-            Align(
-              alignment: AlignmentGeometry.bottomCenter,
-              child: ActionButton(
-                text: 'Back',
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
+      body: CustomScrollView(
+        slivers: [
+          SuperheroAppBar(superhero: superhero),
+          SliverToBoxAdapter(
+            child: Column(children: [
+              
+            ])
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SuperheroAppBar extends StatelessWidget {
+  const SuperheroAppBar({
+    super.key,
+    required this.superhero,
+  });
+
+  final Superhero superhero;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      stretch: true,
+      pinned: true,
+      floating: true,
+      expandedHeight: 348,
+      backgroundColor: SuperheroesColors.background,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        title: Text(
+          textAlign: TextAlign.center,
+          superhero.name,
+          style: TextStyle(
+            color: SuperheroesColors.whiteText,
+            fontWeight: FontWeight.w800,
+            fontSize: 22,
+          ),
+        ),
+        background: CachedNetworkImage(
+          imageUrl: superhero.image.url,
+          fit: BoxFit.cover,
         ),
       ),
     );
