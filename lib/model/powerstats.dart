@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'powerstats.g.dart';
 
 
-@JsonSerializable(fieldRename: FieldRename.kebab)
+@JsonSerializable()
 class Powerstats {
   final String? intelligence;
   final String? strength;
@@ -21,7 +21,6 @@ class Powerstats {
     this.combat,
   });
 
-  @JsonSerializable(fieldRename: FieldRename.kebab)
   factory Powerstats.fromJson(Map<String, dynamic> json) => _$PowerstatsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PowerstatsToJson(this);

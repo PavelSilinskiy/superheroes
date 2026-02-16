@@ -148,6 +148,7 @@ class MainBloc {
         final List<SuperheroInfo> found = superheroes
             .map(
               (superhero) => SuperheroInfo(
+                id: superhero.id,
                 name: superhero.name,
                 realName: superhero.biography.fullName,
                 imageUrl: superhero.image.url,
@@ -168,11 +169,13 @@ class MainBloc {
 }
 
 class SuperheroInfo {
+  final String id;
   final String name;
   final String realName;
   final String imageUrl;
 
   const SuperheroInfo({
+    required this.id,
     required this.name,
     required this.realName,
     required this.imageUrl,
@@ -180,7 +183,7 @@ class SuperheroInfo {
 
   @override
   String toString() {
-    return 'SuperHeroInfo{name: $name, realName: $realName, imageUrl: $imageUrl}';
+    return 'SuperHeroInfo{id: $id, name: $name, realName: $realName, imageUrl: $imageUrl}';
   }
 
   @override
@@ -198,17 +201,20 @@ class SuperheroInfo {
 
   static const mocked = [
     SuperheroInfo(
+      id: '70',
       name: 'Batman',
       realName: 'Bruce Wayne',
       imageUrl:
           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
     ),
     SuperheroInfo(
+      id: '732',
       name: 'Ironman',
       realName: 'Tony Stark',
       imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
     ),
     SuperheroInfo(
+      id: '687',
       name: 'Venom',
       realName: 'Eddie Brock',
       imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
