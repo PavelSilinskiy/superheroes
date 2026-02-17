@@ -36,7 +36,7 @@ class Powerstats {
   double get combatPersent => convertStringToPercent(combat);
 
   double convertStringToPercent(final String value) {
-    final intValue = int.tryParse(intelligence);
+    final intValue = int.tryParse(value);
     if (intValue == null) return 0;
     return intValue / 100;
   }
