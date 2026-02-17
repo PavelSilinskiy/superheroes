@@ -4,6 +4,9 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:superheroes/blocs/superhero_bloc.dart';
 import 'package:superheroes/model/biography.dart';
 import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
@@ -11,14 +14,51 @@ import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
 import 'package:superheroes/widgets/action_button.dart';
 
-class SuperheroPage extends StatelessWidget {
+class SuperheroPage extends StatefulWidget {
   final String id;
-  const SuperheroPage({super.key, required this.id});
+  final http.Client? client;
+  const SuperheroPage({super.key, required this.id, this.client});
+
+  @override
+  State<SuperheroPage> createState() => _SuperheroPageState();
+}
+
+class _SuperheroPageState extends State<SuperheroPage> {
+  late SuperheroBloc bloc;
+  late FocusNode textFieldFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = SuperheroBloc(id: widget.id, client: widget.client);
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Provider<SuperheroBloc>.value(
+      value: bloc,
+      child: Scaffold(
+        backgroundColor: SuperheroesColors.background,
+        body: SuperheroPageContent(),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+}
+
+class SuperheroPageContent extends StatelessWidget {
+  const SuperheroPageContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
     final superhero = Superhero(
-      id: id,
+      id: bloc.id,
       name: 'Batman',
       biography: Biography(
         fullName: 'Bruce Wayne',
@@ -38,27 +78,24 @@ class SuperheroPage extends StatelessWidget {
         combat: "100",
       ),
     );
-    return Scaffold(
-      backgroundColor: SuperheroesColors.background,
-      body: CustomScrollView(
-        slivers: [
-          SuperheroAppBar(superhero: superhero),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                if (superhero.powerstats.isNotNull())
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: PowerstatsWidget(powerstats: superhero.powerstats),
-                  ),
-                const SizedBox(height: 36),
-                BiographyWidget(biography: superhero.biography),
-              ],
-            ),
+    return CustomScrollView(
+      slivers: [
+        SuperheroAppBar(superhero: superhero),
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              if (superhero.powerstats.isNotNull())
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: PowerstatsWidget(powerstats: superhero.powerstats),
+                ),
+              const SizedBox(height: 36),
+              BiographyWidget(biography: superhero.biography),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
