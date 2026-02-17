@@ -41,10 +41,14 @@ class SuperheroPage extends StatelessWidget {
         slivers: [
           SuperheroAppBar(superhero: superhero),
           SliverToBoxAdapter(
-            child: Column(children: [
-              
-            ])
-          )
+            child: Column(
+              children: [
+                if (superhero.powerstats.isNotNull())
+                  PowerstatsWidget(powerstats: superhero.powerstats),
+                BiographyWidget(biography: superhero.biography),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -52,10 +56,7 @@ class SuperheroPage extends StatelessWidget {
 }
 
 class SuperheroAppBar extends StatelessWidget {
-  const SuperheroAppBar({
-    super.key,
-    required this.superhero,
-  });
+  const SuperheroAppBar({super.key, required this.superhero});
 
   final Superhero superhero;
 
@@ -82,6 +83,35 @@ class SuperheroAppBar extends StatelessWidget {
           imageUrl: superhero.image.url,
           fit: BoxFit.cover,
         ),
+      ),
+    );
+  }
+}
+
+class PowerstatsWidget extends StatelessWidget {
+  final Powerstats powerstats;
+  const PowerstatsWidget({super.key, required this.powerstats});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class BiographyWidget extends StatelessWidget {
+  final Biography biography;
+
+  const BiographyWidget({super.key, required this.biography});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      alignment: Alignment.center,
+      child: Text(
+        biography.toJson.toString(),
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 16, color: SuperheroesColors.whiteText,),
       ),
     );
   }
