@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,7 +46,10 @@ class SuperheroPage extends StatelessWidget {
             child: Column(
               children: [
                 if (superhero.powerstats.isNotNull())
-                  PowerstatsWidget(powerstats: superhero.powerstats),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: PowerstatsWidget(powerstats: superhero.powerstats),
+                  ),
                 BiographyWidget(biography: superhero.biography),
               ],
             ),
@@ -94,7 +99,87 @@ class PowerstatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      height: 292,
+      padding: const EdgeInsets.only(top: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(height: 49, alignment: Alignment.topCenter,
+            child: Text(
+              'Powerstats'.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: SuperheroesColors.whiteText,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PowerstatWidget(
+                title: 'intelligence',
+                value: int.parse(powerstats.intelligence!),
+              ),
+              PowerstatWidget(
+                title: 'strength',
+                value: int.parse(powerstats.strength!),
+              ),
+              PowerstatWidget(
+                title: 'speed',
+                value: int.parse(powerstats.speed!),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PowerstatWidget(
+                title: 'durability',
+                value: int.parse(powerstats.durability!),
+              ),
+              PowerstatWidget(
+                title: 'power',
+                value: int.parse(powerstats.power!),
+              ),
+              PowerstatWidget(
+                title: 'combat',
+                value: int.parse(powerstats.combat!),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PowerstatWidget extends StatelessWidget {
+  String title;
+  int value;
+  final canvas = Canvas(PictureRecorder());
+  //CustomPaint paint = CustomPaint();
+
+  PowerstatWidget({super.key, required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        //CustomPaint(painter: Paint),
+        Text(
+          title.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: SuperheroesColors.whiteText,
+            fontWeight: FontWeight.w700,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -111,7 +196,7 @@ class BiographyWidget extends StatelessWidget {
       child: Text(
         biography.toJson.toString(),
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, color: SuperheroesColors.whiteText,),
+        style: TextStyle(fontSize: 16, color: SuperheroesColors.whiteText),
       ),
     );
   }
