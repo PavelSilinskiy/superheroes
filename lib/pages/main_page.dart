@@ -20,7 +20,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late MainBloc bloc = MainBloc();
+  late MainBloc bloc;
   late FocusNode textFieldFocusNode;
 
   @override
@@ -40,6 +40,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    bloc = MainBloc(client: widget.client);
     textFieldFocusNode = FocusNode();
   }
 
@@ -87,9 +88,7 @@ class MainPageStateWidget extends StatelessWidget {
 
   final focus = FocusNode();
 
-  void focusSearch() {
-    
-  }
+  void focusSearch() {}
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +113,9 @@ class MainPageStateWidget extends StatelessWidget {
                     imageHeight: 119,
                     imageWidth: 108,
                     imageTopPudding: 9,
-                    onTap: () {FocusScope.of(context).requestFocus(node);},
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(node);
+                    },
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -141,7 +142,9 @@ class MainPageStateWidget extends StatelessWidget {
                 imageHeight: 112,
                 imageWidth: 84,
                 imageTopPudding: 16,
-                onTap: () {FocusScope.of(context).requestFocus(node);},
+                onTap: () {
+                  FocusScope.of(context).requestFocus(node);
+                },
               );
 
             case MainPageState.loadingError:
