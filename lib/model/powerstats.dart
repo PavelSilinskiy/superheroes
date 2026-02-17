@@ -4,35 +4,42 @@ part 'powerstats.g.dart';
 
 @JsonSerializable()
 class Powerstats {
-  final String? intelligence;
-  final String? strength;
-  final String? speed;
-  final String? durability;
-  final String? power;
-  final String? combat;
+  final String intelligence;
+  final String strength;
+  final String speed;
+  final String durability;
+  final String power;
+  final String combat;
 
   Powerstats({
-    this.intelligence,
-    this.strength,
-    this.speed,
-    this.durability,
-    this.power,
-    this.combat,
+    required this.intelligence,
+    required this.strength,
+    required this.speed,
+    required this.durability,
+    required this.power,
+    required this.combat,
   });
 
   bool isNotNull() =>
-      !(intelligence == null ||
-          intelligence == 'null' ||
-          strength == null ||
+      !(intelligence == 'null' ||
           strength == 'null' ||
-          speed == null ||
           speed == 'null' ||
-          durability == null ||
           durability == 'null' ||
-          power == null ||
           power == 'null' ||
-          combat == null ||
           combat == 'null');
+
+  double get intelligencePersent => convertStringToPercent(intelligence);
+  double get strengthPersent => convertStringToPercent(strength);
+  double get speedPersent => convertStringToPercent(speed);
+  double get durabilityPersent => convertStringToPercent(durability);
+  double get powerPersent => convertStringToPercent(power);
+  double get combatPersent => convertStringToPercent(combat);
+
+  double convertStringToPercent(final String value) {
+    final intValue = int.tryParse(intelligence);
+    if (intValue == null) return 0;
+    return intValue / 100;
+  }
 
   factory Powerstats.fromJson(Map<String, dynamic> json) =>
       _$PowerstatsFromJson(json);
