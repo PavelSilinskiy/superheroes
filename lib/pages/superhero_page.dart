@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -45,11 +46,13 @@ class SuperheroPage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Column(
               children: [
+                const SizedBox(height: 30),
                 if (superhero.powerstats.isNotNull())
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: PowerstatsWidget(powerstats: superhero.powerstats),
                   ),
+                const SizedBox(height: 36),
                 BiographyWidget(biography: superhero.biography),
               ],
             ),
@@ -99,54 +102,76 @@ class PowerstatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 292,
-      padding: const EdgeInsets.only(top: 30),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(height: 49, alignment: Alignment.topCenter,
-            child: Text(
-              'Powerstats'.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: SuperheroesColors.whiteText,
-                fontWeight: FontWeight.w700,
-                fontSize: 18,
-              ),
+          Text(
+            'Powerstats'.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: SuperheroesColors.whiteText,
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
             ),
           ),
+          SizedBox(height: 24),
           Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              PowerstatWidget(
-                title: 'intelligence',
-                value: int.parse(powerstats.intelligence!),
+              Expanded(
+                child: Center(
+                  child: PowerstatWidget(
+                    title: 'intelligence',
+                    value: powerstats.intelligencePersent,
+                  ),
+                ),
               ),
-              PowerstatWidget(
-                title: 'strength',
-                value: int.parse(powerstats.strength!),
+              Expanded(
+                child: Center(
+                  child: PowerstatWidget(
+                    title: 'strength',
+                    value: powerstats.strengthPersent,
+                  ),
+                ),
               ),
-              PowerstatWidget(
-                title: 'speed',
-                value: int.parse(powerstats.speed!),
+              Expanded(
+                child: Center(
+                  child: PowerstatWidget(
+                    title: 'speed',
+                    value: powerstats.speedPersent,
+                  ),
+                ),
               ),
             ],
           ),
+          SizedBox(height: 20),
           Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              PowerstatWidget(
-                title: 'durability',
-                value: int.parse(powerstats.durability!),
+              Expanded(
+                child: Center(
+                  child: PowerstatWidget(
+                    title: 'durability',
+                    value: powerstats.durabilityPersent,
+                  ),
+                ),
               ),
-              PowerstatWidget(
-                title: 'power',
-                value: int.parse(powerstats.power!),
+              Expanded(
+                child: Center(
+                  child: PowerstatWidget(
+                    title: 'power',
+                    value: powerstats.powerPersent,
+                  ),
+                ),
               ),
-              PowerstatWidget(
-                title: 'combat',
-                value: int.parse(powerstats.combat!),
+              Expanded(
+                child: Center(
+                  child: PowerstatWidget(
+                    title: 'combat',
+                    value: powerstats.combatPersent,
+                  ),
+                ),
               ),
             ],
           ),
@@ -158,7 +183,7 @@ class PowerstatsWidget extends StatelessWidget {
 
 class PowerstatWidget extends StatelessWidget {
   String title;
-  int value;
+  double value;
   final canvas = Canvas(PictureRecorder());
   //CustomPaint paint = CustomPaint();
 
@@ -169,6 +194,24 @@ class PowerstatWidget extends StatelessWidget {
     return Column(
       children: [
         //CustomPaint(painter: Paint),
+        Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            ArcWidget(color: calculateColorByValue(value), value: value),
+            Padding(
+              padding: const EdgeInsets.only(top: 17),
+              child: Text(
+                '${(value * 100).toInt()}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: calculateColorByValue(value),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
         Text(
           title.toUpperCase(),
           textAlign: TextAlign.center,
@@ -180,6 +223,63 @@ class PowerstatWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Color calculateColorByValue(double value) {
+    if (value >= 0.0 && value <= 0.5) {
+      return Color.lerp(Color(0xFFF10C0C), Color(0xFFF97236), value * 2)!;
+    } else if (value <= 1.0) {
+      return Color.lerp(Color(0xFFF97236), Color(0xFF019B2C), value * 2)!;
+    }
+    {
+      return Colors.black;
+    }
+  }
+}
+
+class ArcWidget extends StatelessWidget {
+  final double value;
+  final Color color;
+
+  const ArcWidget({super.key, required this.value, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: ArcCustomPainter(color: color, value: value),
+      size: Size(66, 33),
+    );
+  }
+}
+
+class ArcCustomPainter extends CustomPainter {
+  final double value;
+  final Color color;
+
+  ArcCustomPainter({required this.value, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height * 2);
+    final backgroundPaint = Paint()
+      ..color = Colors.white24
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 6;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 6;
+    canvas.drawArc(rect, pi, pi, false, backgroundPaint);
+    canvas.drawArc(rect, pi, pi * value, false, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return !(oldDelegate is ArcCustomPainter &&
+        oldDelegate.value == value &&
+        oldDelegate.color == color);
   }
 }
 
