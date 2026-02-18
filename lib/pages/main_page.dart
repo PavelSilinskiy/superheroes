@@ -103,28 +103,17 @@ class MainPageStateWidget extends StatelessWidget {
           final state = snapshot.data!;
           switch (state) {
             case MainPageState.noFavorites:
-              return Stack(
-                children: [
-                  InfoWithButton(
-                    title: 'No favorites yet',
-                    subtitle: 'Search and add',
-                    buttonText: 'Search',
-                    assetImage: SuperheroesImages.ironman,
-                    imageHeight: 119,
-                    imageWidth: 108,
-                    imageTopPudding: 9,
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(node);
-                    },
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ActionButton(
-                      text: 'Remove',
-                      onPressed: bloc.removeFavorite,
-                    ),
-                  ),
-                ],
+              return InfoWithButton(
+                title: 'No favorites yet',
+                subtitle: 'Search and add',
+                buttonText: 'Search',
+                assetImage: SuperheroesImages.ironman,
+                imageHeight: 119,
+                imageWidth: 108,
+                imageTopPudding: 9,
+                onTap: () {
+                  FocusScope.of(context).requestFocus(node);
+                },
               );
 
             case MainPageState.minSymbols:
@@ -298,20 +287,12 @@ class FavoritesStateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
-    return Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
-          child: SuperheroesList(
-            title: 'Your favorites',
-            stream: bloc.observeFavorites(),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: ActionButton(text: 'Remove', onPressed: bloc.removeFavorite),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 90, left: 16, right: 16),
+      child: SuperheroesList(
+        title: 'Your favorites',
+        stream: bloc.observeFavorites(),
+      ),
     );
   }
 }

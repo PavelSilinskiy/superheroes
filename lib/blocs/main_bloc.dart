@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:superheroes/exception/api_exception.dart';
+import 'package:superheroes/favorite_superheroes_storage.dart';
 import 'package:superheroes/pages/main_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,8 +19,8 @@ class MainBloc {
   final BehaviorSubject<MainPageState> _stateSubject = BehaviorSubject();
   // final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
   //     BehaviorSubject.seeded(SuperheroInfo.mocked);
-  final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
-      BehaviorSubject.seeded(SuperheroInfo.mocked);
+  // final BehaviorSubject<List<SuperheroInfo>> _favoritesInfoSubject =
+  //     BehaviorSubject.seeded(SuperheroInfo.mocked);
   final BehaviorSubject<List<SuperheroInfo>> _searchedInfoSubject =
       BehaviorSubject();
   final BehaviorSubject<String> _currentTextSubject = BehaviorSubject.seeded(
@@ -33,11 +34,11 @@ class MainBloc {
   MainBloc({this.client}) {
     _stateSubject.sink.add(MainPageState.noFavorites);
     _currentTextSubscription =
-        Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+        Rx.combineLatest2<String, List<Superhero>, MainPageStateInfo>(
           _currentTextSubject.distinct().debounceTime(
             Duration(milliseconds: 500),
           ),
-          _favoritesInfoSubject,
+          FavoriteSuperheroesStorage.getInstance().observeFavoriteSuperheroes(),
           (searchText, favorites) {
             return MainPageStateInfo(
               searchText: searchText,
@@ -68,7 +69,13 @@ class MainBloc {
   }
 
   Stream<List<SuperheroInfo>> observeFavorites() {
-    return _favoritesInfoSubject;
+    return FavoriteSuperheroesStorage.getInstance()
+        .observeFavoriteSuperheroes()
+        .map(
+          (superheroes) => superheroes
+              .map((superhero) => SuperheroInfo.fromSuperhero(superhero))
+              .toList(),
+        );
   }
 
   void retry() {
@@ -86,19 +93,19 @@ class MainBloc {
     _currentTextSubject.add(text);
   }
 
-  void removeFavorite() {
-    var currentList = _favoritesInfoSubject.value;
-    if (currentList.isEmpty) {
-      _favoritesInfoSubject.add(SuperheroInfo.mocked);
-    } else {
-      _favoritesInfoSubject.add(currentList.sublist(0, currentList.length - 1));
-    }
-  }
+  // void removeFavorite() {
+  //   var currentList = _favoritesInfoSubject.value;
+  //   if (currentList.isEmpty) {
+  //     _favoritesInfoSubject.add(SuperheroInfo.mocked);
+  //   } else {
+  //     _favoritesInfoSubject.add(currentList.sublist(0, currentList.length - 1));
+  //   }
+  // }
 
   void dispose() {
     _currentTextSubscription?.cancel();
     _stateSubject.close();
-    _favoritesInfoSubject.close();
+    //_favoritesInfoSubject.close();
     _searchedInfoSubject.close();
     _currentTextSubject.close();
     client?.close();
@@ -147,12 +154,7 @@ class MainBloc {
             .toList();
         final List<SuperheroInfo> found = superheroes
             .map(
-              (superhero) => SuperheroInfo(
-                id: superhero.id,
-                name: superhero.name,
-                realName: superhero.biography.fullName,
-                imageUrl: superhero.image.url,
-              ),
+              (superhero) => SuperheroInfo.fromSuperhero(superhero),
             )
             .toList();
         return found;
@@ -180,6 +182,15 @@ class SuperheroInfo {
     required this.realName,
     required this.imageUrl,
   });
+
+  factory SuperheroInfo.fromSuperhero(Superhero superhero) {
+    return SuperheroInfo(
+      id: superhero.id,
+      name: superhero.name,
+      realName: superhero.biography.fullName,
+      imageUrl: superhero.image.url,
+    );
+  }
 
   @override
   String toString() {
