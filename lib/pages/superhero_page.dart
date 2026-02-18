@@ -279,7 +279,7 @@ class PowerstatWidget extends StatelessWidget {
     if (value >= 0.0 && value <= 0.5) {
       return Color.lerp(Color(0xFFF10C0C), Color(0xFFF97236), value * 2)!;
     } else if (value <= 1.0) {
-      return Color.lerp(Color(0xFFF97236), Color(0xFF019B2C), value * 2)!;
+      return Color.lerp(Color(0xFFF97236), Color(0xFF019B2C), value * 2 - 1)!;
     }
     {
       return Colors.black;
