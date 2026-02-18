@@ -363,22 +363,36 @@ class SuperheroesList extends StatelessWidget {
                 );
               } else {
                 final item = snapshot.data![i - 1];
-                return SuperheroCard(
-                  superheroInfo: item,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SuperheroPage(id: item.id),
-                      ),
-                    );
-                  },
-                );
+                return ListTile(superheroInfo: item);
               }
             },
             separatorBuilder: (context, index) => SizedBox(height: 8),
           );
         }
+      },
+    );
+  }
+}
+
+class ListTile extends StatelessWidget {
+  const ListTile({
+    super.key,
+    required this.superheroInfo,
+  });
+
+  final SuperheroInfo superheroInfo;
+
+  @override
+  Widget build(BuildContext context) {
+    return SuperheroCard(
+      superheroInfo: superheroInfo,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SuperheroPage(id: superheroInfo.id),
+          ),
+        );
       },
     );
   }
