@@ -57,45 +57,57 @@ class SuperheroPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SuperheroBloc>(context, listen: false);
-    final superhero = Superhero(
-      id: bloc.id,
-      name: 'Batman',
-      biography: Biography(
-        fullName: 'Bruce Wayne',
-        alignment: 'good',
-        aliases: ['ManMan'],
-        placeOfBirth: 'Gotham',
-      ),
-      image: ServerImage(
-        url: 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
-      ),
-      powerstats: Powerstats(
-        intelligence: "100",
-        strength: "26",
-        speed: "27",
-        durability: "50",
-        power: "47",
-        combat: "100",
-      ),
-    );
-    return CustomScrollView(
-      slivers: [
-        SuperheroAppBar(superhero: superhero),
-        SliverToBoxAdapter(
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              if (superhero.powerstats.isNotNull())
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: PowerstatsWidget(powerstats: superhero.powerstats),
+    // final superhero = Superhero(
+    //   id: bloc.id,
+    //   name: 'Batman',
+    //   biography: Biography(
+    //     fullName: 'Bruce Wayne',
+    //     alignment: 'good',
+    //     aliases: ['ManMan'],
+    //     placeOfBirth: 'Gotham',
+    //   ),
+    //   image: ServerImage(
+    //     url: 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+    //   ),
+    //   powerstats: Powerstats(
+    //     intelligence: "100",
+    //     strength: "26",
+    //     speed: "27",
+    //     durability: "50",
+    //     power: "47",
+    //     combat: "100",
+    //   ),
+    // );
+    return StreamBuilder(
+      stream: bloc.observeSuperhero(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return SizedBox();
+        } else {
+          final superhero = snapshot.data!;
+          return CustomScrollView(
+            slivers: [
+              SuperheroAppBar(superhero: superhero),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    if (superhero.powerstats.isNotNull())
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: PowerstatsWidget(
+                          powerstats: superhero.powerstats,
+                        ),
+                      ),
+                    const SizedBox(height: 36),
+                    BiographyWidget(biography: superhero.biography),
+                  ],
                 ),
-              const SizedBox(height: 36),
-              BiographyWidget(biography: superhero.biography),
+              ),
             ],
-          ),
-        ),
-      ],
+          );
+        }
+      },
     );
   }
 }
