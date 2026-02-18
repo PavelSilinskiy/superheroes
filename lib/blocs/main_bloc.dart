@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:superheroes/exception/api_exception.dart';
 import 'package:superheroes/favorite_superheroes_storage.dart';
+import 'package:superheroes/model/alignmentInfo.dart';
 import 'package:superheroes/pages/main_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -193,12 +194,14 @@ class SuperheroInfo {
   final String name;
   final String realName;
   final String imageUrl;
+  final AlignmentInfo? alignmentInfo;
 
   const SuperheroInfo({
     required this.id,
     required this.name,
     required this.realName,
     required this.imageUrl,
+    this.alignmentInfo,
   });
 
   factory SuperheroInfo.fromSuperhero(Superhero superhero) {
@@ -207,6 +210,7 @@ class SuperheroInfo {
       name: superhero.name,
       realName: superhero.biography.fullName,
       imageUrl: superhero.image.url,
+      alignmentInfo: superhero.biography.alignmentInfo,
     );
   }
 
@@ -235,18 +239,21 @@ class SuperheroInfo {
       realName: 'Bruce Wayne',
       imageUrl:
           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+      alignmentInfo: AlignmentInfo.good,
     ),
     SuperheroInfo(
       id: '732',
       name: 'Ironman',
       realName: 'Tony Stark',
       imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
+      alignmentInfo: AlignmentInfo.good,
     ),
     SuperheroInfo(
       id: '687',
       name: 'Venom',
       realName: 'Eddie Brock',
       imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
+      alignmentInfo: AlignmentInfo.bad,
     ),
   ];
 }

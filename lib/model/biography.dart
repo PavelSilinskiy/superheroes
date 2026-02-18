@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:superheroes/model/alignmentInfo.dart';
 
 part 'biography.g.dart';
 
@@ -22,7 +23,11 @@ class Biography {
     required this.alignment,
   });
 
+  AlignmentInfo? get alignmentInfo => AlignmentInfo.fromAlignment(alignment);
+
   factory Biography.fromJson(Map<String, dynamic> json) => _$BiographyFromJson(json);
 
   Map<String, dynamic> toJson() => _$BiographyToJson(this);
+
+
 }
