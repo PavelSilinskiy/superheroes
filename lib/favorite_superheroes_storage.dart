@@ -45,9 +45,14 @@ class FavoriteSuperheroesStorage {
     return await _setSuperheroes(superheroes);
   }
 
-  Future<Superhero> getSuperhero(final String id) async {
+  Future<Superhero?> getSuperhero(final String id) async {
     final List<Superhero> superheroes = await _getSuperheroes();
-    return superheroes.firstWhere((superhero) => (superhero.id == id));
+    for (var superhero in superheroes) {
+      if (superhero.id == id) {
+        return superhero;
+      }
+    }
+    return null;
   }
 
   Stream<List<Superhero>> observeFavoriteSuperheroes() {
