@@ -12,6 +12,7 @@ import 'package:superheroes/model/powerstats.dart';
 import 'package:superheroes/model/server_image.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
+import 'package:superheroes/resourses/superheroes_icons.dart';
 import 'package:superheroes/widgets/action_button.dart';
 
 class SuperheroPage extends StatefulWidget {
@@ -125,7 +126,7 @@ class SuperheroAppBar extends StatelessWidget {
       floating: true,
       expandedHeight: 348,
       backgroundColor: SuperheroesColors.background,
-      actions: [],
+      actions: [StarWidget()],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
@@ -142,6 +143,35 @@ class SuperheroAppBar extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
+    );
+  }
+}
+
+class StarWidget extends StatelessWidget {
+  const StarWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
+    return StreamBuilder<bool>(
+      stream: bloc.observeIsFavorite(),
+      builder: (context, snapshot) {
+        final bool favorite =
+            snapshot.hasData && snapshot.data != null && snapshot.data == true;
+        return GestureDetector(
+          onTap: favorite ? bloc.removeFromFavorites : bloc.addToFavorites,
+          child: Container(
+            height: 52,
+            width: 52,
+            alignment: Alignment.center,
+            child: Image.asset(
+              favorite ? SuperheroesIcons.starFill : SuperheroesIcons.starEmpty,
+              height: 32,
+              width: 32,
+            ),
+          ),
+        );
+      },
     );
   }
 }

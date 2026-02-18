@@ -24,6 +24,8 @@ class SuperheroBloc {
 
   Stream<Superhero> observeSuperhero() => _superheroSubject.stream;
 
+  Stream<bool> observeIsFavorite() => Stream.value(false);
+
 
   void requestSuperhero() {
     requestSubscription?.cancel();
@@ -35,6 +37,14 @@ class SuperheroBloc {
         print('Error happened in requestSuperhero(): $error, $stackTrace');
       }
     );
+  }
+
+  void addToFavorites() {
+
+  }
+
+  void removeFromFavorites() {
+
   }
 
   Future<Superhero> request(String id) async {
