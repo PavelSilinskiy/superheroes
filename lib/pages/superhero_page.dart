@@ -125,6 +125,7 @@ class SuperheroAppBar extends StatelessWidget {
       floating: true,
       expandedHeight: 348,
       backgroundColor: SuperheroesColors.background,
+      actions: [],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
