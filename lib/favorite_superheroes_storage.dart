@@ -1,10 +1,22 @@
 import 'dart:convert';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoriteSuperheroesStorage {
   static const _key = "favorite_superheroes";
+
+  final PublishSubject updater = PublishSubject<Null>();
+
+  static FavoriteSuperheroesStorage? _instance;
+
+  factory FavoriteSuperheroesStorage.getInstance() {
+    return _instance ??= FavoriteSuperheroesStorage._internal();
+  }
+
+  FavoriteSuperheroesStorage._internal();
+
 
   Future<List<String>> _getRawSuperheroes() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
@@ -13,7 +25,9 @@ class FavoriteSuperheroesStorage {
 
   Future<bool> _setRawSuperheroes(List<String> rawSuperheroes) async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
-    return sp.setStringList(_key, rawSuperheroes);
+    final result = sp.setStringList(_key, rawSuperheroes);
+    updater.add(null);
+    return result;
   }
 
   Future<List<Superhero>> _getSuperheroes() async {
@@ -55,12 +69,21 @@ class FavoriteSuperheroesStorage {
     return null;
   }
 
-  Stream<List<Superhero>> observeFavoriteSuperheroes() {
-    return _getSuperheroes().asStream();
+  Future<bool> isFavorite(final String id) async {
+    return (await getSuperhero(id) != null);
   }
 
-  Stream<bool> observeIsFavorite(final String id) {
-    //TODO:
-    throw UnimplementedError();
+  Stream<List<Superhero>> observeFavoriteSuperheroes() async* {
+    yield await _getSuperheroes();
+    await for (var _ in updater) {
+      yield await _getSuperheroes();
+    }
+  }
+
+  Stream<bool> observeIsFavorite(final String id) async* {
+    yield await isFavorite(id);
+    await for (var _ in updater) {
+      yield await isFavorite(id);
+    } 
   }
 }
