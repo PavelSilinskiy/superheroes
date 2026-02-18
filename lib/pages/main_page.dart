@@ -375,25 +375,43 @@ class SuperheroesList extends StatelessWidget {
 }
 
 class ListTile extends StatelessWidget {
-  const ListTile({
-    super.key,
-    required this.superheroInfo,
-  });
+  const ListTile({super.key, required this.superheroInfo});
 
   final SuperheroInfo superheroInfo;
 
   @override
   Widget build(BuildContext context) {
-    return SuperheroCard(
-      superheroInfo: superheroInfo,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SuperheroPage(id: superheroInfo.id),
+    final bloc = Provider.of<MainBloc>(context, listen: false);
+    return Dismissible(
+      key: ValueKey(superheroInfo.id),
+      background: Container(
+        height: 70,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: SuperheroesColors.removeFromFavoritesBackground,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          'Remove from favorites'.toUpperCase(),
+          style: TextStyle(
+            fontSize: 12,
+            color: SuperheroesColors.whiteText,
+            fontWeight: FontWeight.w700,
           ),
-        );
-      },
+        ),
+      ),
+      onDismissed: (direction) {bloc.removeFromFavorites(superheroInfo.id);},
+      child: SuperheroCard(
+        superheroInfo: superheroInfo,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SuperheroPage(id: superheroInfo.id),
+            ),
+          );
+        },
+      ),
     );
   }
 }

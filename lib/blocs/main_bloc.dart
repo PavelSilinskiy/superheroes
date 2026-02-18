@@ -27,6 +27,8 @@ class MainBloc {
     '',
   );
 
+  StreamSubscription? _removeFromFavoritesSubscription;
+
   StreamSubscription? _currentTextSubscription;
 
   StreamSubscription? _searchSubscription;
@@ -78,6 +80,21 @@ class MainBloc {
         );
   }
 
+  void removeFromFavorites(String id) {
+    _removeFromFavoritesSubscription?.cancel();
+    _removeFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance().removeFromFavorites(id).asStream().listen(
+      (result) {
+        if (result) {
+          print('Superhero with id $id was removed from favorites');
+        } else {
+          print('Failed to remove superhero with id $id from favorites');
+        }
+      },
+      onError: (error, stackTrace) {
+        print('Error happened in removeFromFavorites(): $error, $stackTrace');
+      });
+  }
+
   void retry() {
     searchForSuperheroes(_currentTextSubject.value);
   }
@@ -103,6 +120,7 @@ class MainBloc {
   // }
 
   void dispose() {
+    _removeFromFavoritesSubscription?.cancel();
     _currentTextSubscription?.cancel();
     _stateSubject.close();
     //_favoritesInfoSubject.close();

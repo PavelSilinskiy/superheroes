@@ -12,6 +12,7 @@ class SuperheroesColors {
 
   static const Color cardColor = Color(0xFF2C3243);
   static const Color cardImageBackground = Color(0x3DFFFFFF);
+  static const Color removeFromFavoritesBackground = Color(0xFF961B1B);
 
   static const Color searchBarBackground = Color(0xBF2C3243);
   static const Color enabledTextFieldBorder = Color(0x3DFFFFFF);
