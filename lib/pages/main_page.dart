@@ -294,7 +294,7 @@ class FavoritesStateScreen extends StatelessWidget {
       child: SuperheroesList(
         title: 'Your favorites',
         stream: bloc.observeFavorites(),
-        dismisable: true,
+        ableToSwipe: true,
       ),
     );
   }
@@ -337,9 +337,9 @@ class LoadingIndicator extends StatelessWidget {
 class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
-  final bool dismisable;
+  final bool ableToSwipe;
 
-  const SuperheroesList({super.key, required this.title, required this.stream, this.dismisable = false});
+  const SuperheroesList({super.key, required this.title, required this.stream, this.ableToSwipe = false});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<SuperheroInfo>>(
@@ -367,7 +367,7 @@ class SuperheroesList extends StatelessWidget {
                 );
               } else {
                 final item = snapshot.data![i - 1];
-                return ListTile(superheroInfo: item, dismissable: dismisable);
+                return ListTile(superheroInfo: item, ableToSwipe: ableToSwipe);
               }
             },
             separatorBuilder: (context, index) => SizedBox(height: 8),
@@ -379,10 +379,10 @@ class SuperheroesList extends StatelessWidget {
 }
 
 class ListTile extends StatelessWidget {
-  const ListTile({super.key, required this.superheroInfo, this.dismissable = false});
+  const ListTile({super.key, required this.superheroInfo, this.ableToSwipe = false});
 
   final SuperheroInfo superheroInfo;
-  final bool dismissable;
+  final bool ableToSwipe;
 
 
   @override
@@ -390,7 +390,7 @@ class ListTile extends StatelessWidget {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return Dismissible(
       key: ValueKey(superheroInfo.id),
-      direction: dismissable ? DismissDirection.horizontal : DismissDirection.none,
+      direction: ableToSwipe ? DismissDirection.horizontal : DismissDirection.none,
       background: Container(
         height: 70,
         alignment: Alignment.center,
