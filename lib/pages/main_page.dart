@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
@@ -25,14 +26,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableProvider<FocusNode>.value(
-      value: textFieldFocusNode,
-      child: Provider<MainBloc>.value(
-        value: bloc,
-        child: Scaffold(
-          backgroundColor: SuperheroesColors.background,
-          body: SafeArea(child: MainPageContent()),
-        ),
+    return Provider<MainBloc>.value(
+      value: bloc,
+      child: Scaffold(
+        backgroundColor: SuperheroesColors.background,
+        body: SafeArea(child: MainPageContent(textFieldFocusNode: textFieldFocusNode)),
       ),
     );
   }
@@ -52,14 +50,16 @@ class _MainPageState extends State<MainPage> {
 }
 
 class MainPageContent extends StatelessWidget {
-  const MainPageContent({super.key});
+  final FocusNode textFieldFocusNode;
+
+  const MainPageContent({super.key, required this.textFieldFocusNode});
 
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return Stack(
       children: [
-        Center(child: MainPageStateWidget()),
+        Center(child: MainPageStateWidget(textFieldFocusNode: textFieldFocusNode)),
         // Align(
         //   alignment: Alignment.bottomCenter,
         //   child: GestureDetector(
@@ -76,7 +76,7 @@ class MainPageContent extends StatelessWidget {
         // ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
-          child: SearchWidget(),
+          child: SearchWidget(textFieldFocusNode: textFieldFocusNode),
         ),
       ],
     );
@@ -84,16 +84,17 @@ class MainPageContent extends StatelessWidget {
 }
 
 class MainPageStateWidget extends StatelessWidget {
-  MainPageStateWidget({super.key});
+  final FocusNode textFieldFocusNode;
 
-  final focus = FocusNode();
+  MainPageStateWidget({super.key, required this.textFieldFocusNode});
 
-  void focusSearch() {}
+  // final focus = FocusNode();
+
+  // void focusSearch() {}
 
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-    var node = Provider.of<FocusNode>(context);
     return StreamBuilder<MainPageState>(
       stream: bloc.observeMainPageState(),
       builder: (context, snapshot) {
@@ -112,7 +113,7 @@ class MainPageStateWidget extends StatelessWidget {
                 imageWidth: 108,
                 imageTopPudding: 9,
                 onTap: () {
-                  FocusScope.of(context).requestFocus(node);
+                  FocusScope.of(context).requestFocus(textFieldFocusNode);
                 },
               );
 
@@ -132,7 +133,7 @@ class MainPageStateWidget extends StatelessWidget {
                 imageWidth: 84,
                 imageTopPudding: 16,
                 onTap: () {
-                  FocusScope.of(context).requestFocus(node);
+                  FocusScope.of(context).requestFocus(textFieldFocusNode);
                 },
               );
 
@@ -166,7 +167,9 @@ class MainPageStateWidget extends StatelessWidget {
 }
 
 class SearchWidget extends StatefulWidget {
-  const SearchWidget({super.key});
+  const SearchWidget({super.key, required this.textFieldFocusNode});
+
+  final FocusNode textFieldFocusNode;
 
   @override
   State<SearchWidget> createState() => _SearchWidgetState();
@@ -189,14 +192,13 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
-    final focusNode = Provider.of<FocusNode>(context);
     return StreamBuilder(
       stream: bloc.observeCurrentText().distinct(
         (a, b) => a.isEmpty == b.isEmpty,
       ),
       builder: (context, asyncSnapshot) {
         return TextField(
-          focusNode: focusNode,
+          focusNode: widget.textFieldFocusNode,
           controller: controller,
           onChanged: bloc.updateText,
           style: TextStyle(
@@ -292,6 +294,7 @@ class FavoritesStateScreen extends StatelessWidget {
       child: SuperheroesList(
         title: 'Your favorites',
         stream: bloc.observeFavorites(),
+        dismisable: true,
       ),
     );
   }
@@ -334,8 +337,9 @@ class LoadingIndicator extends StatelessWidget {
 class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
+  final bool dismisable;
 
-  const SuperheroesList({super.key, required this.title, required this.stream});
+  const SuperheroesList({super.key, required this.title, required this.stream, this.dismisable = false});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<SuperheroInfo>>(
@@ -363,7 +367,7 @@ class SuperheroesList extends StatelessWidget {
                 );
               } else {
                 final item = snapshot.data![i - 1];
-                return ListTile(superheroInfo: item);
+                return ListTile(superheroInfo: item, dismissable: dismisable);
               }
             },
             separatorBuilder: (context, index) => SizedBox(height: 8),
@@ -375,15 +379,18 @@ class SuperheroesList extends StatelessWidget {
 }
 
 class ListTile extends StatelessWidget {
-  const ListTile({super.key, required this.superheroInfo});
+  const ListTile({super.key, required this.superheroInfo, this.dismissable = false});
 
   final SuperheroInfo superheroInfo;
+  final bool dismissable;
+
 
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return Dismissible(
       key: ValueKey(superheroInfo.id),
+      direction: dismissable ? DismissDirection.horizontal : DismissDirection.none,
       background: Container(
         height: 70,
         alignment: Alignment.center,
