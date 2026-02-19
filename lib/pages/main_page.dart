@@ -367,7 +367,7 @@ class SuperheroesList extends StatelessWidget {
                 );
               } else {
                 final item = snapshot.data![i - 1];
-                return ListTile(superheroInfo: item, ableToSwipe: ableToSwipe);
+                return ListTile(superhero: item, ableToSwipe: ableToSwipe);
               }
             },
             separatorBuilder: (context, index) => SizedBox(height: 8),
@@ -379,9 +379,9 @@ class SuperheroesList extends StatelessWidget {
 }
 
 class ListTile extends StatelessWidget {
-  const ListTile({super.key, required this.superheroInfo, this.ableToSwipe = false});
+  const ListTile({super.key, required this.superhero, this.ableToSwipe = false});
 
-  final SuperheroInfo superheroInfo;
+  final SuperheroInfo superhero;
   final bool ableToSwipe;
 
 
@@ -389,7 +389,7 @@ class ListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
     return Dismissible(
-      key: ValueKey(superheroInfo.id),
+      key: ValueKey(superhero.id),
       direction: ableToSwipe ? DismissDirection.horizontal : DismissDirection.none,
       background: Container(
         height: 70,
@@ -407,14 +407,14 @@ class ListTile extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (direction) {bloc.removeFromFavorites(superheroInfo.id);},
+      onDismissed: (direction) {bloc.removeFromFavorites(superhero.id);},
       child: SuperheroCard(
-        superheroInfo: superheroInfo,
+        superheroInfo: superhero,
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SuperheroPage(id: superheroInfo.id),
+              builder: (context) => SuperheroPage(id: superhero.id),
             ),
           );
         },
