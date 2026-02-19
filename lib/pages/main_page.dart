@@ -388,9 +388,23 @@ class ListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<MainBloc>(context, listen: false);
+    final card = SuperheroCard(
+      superheroInfo: superhero,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SuperheroPage(id: superhero.id),
+          ),
+        );
+      },
+    );
+    if (!ableToSwipe) {
+      return card;
+    } else {
     return Dismissible(
       key: ValueKey(superhero.id),
-      direction: ableToSwipe ? DismissDirection.horizontal : DismissDirection.none,
+      direction: DismissDirection.horizontal,
       background: Container(
         height: 70,
         alignment: Alignment.center,
@@ -408,17 +422,7 @@ class ListTile extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {bloc.removeFromFavorites(superhero.id);},
-      child: SuperheroCard(
-        superheroInfo: superhero,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SuperheroPage(id: superhero.id),
-            ),
-          );
-        },
-      ),
-    );
+      child: card
+    );}
   }
 }
