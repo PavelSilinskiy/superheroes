@@ -16,6 +16,8 @@ import 'package:superheroes/resourses/superheroes_icons.dart';
 import 'package:superheroes/resourses/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
 
+import '../model/alignmentInfo.dart';
+
 class SuperheroPage extends StatefulWidget {
   final String id;
   final http.Client? client;
@@ -102,7 +104,11 @@ class SuperheroPageContent extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(height: 36),
-                    BiographyWidget(biography: superhero.biography),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: BiographyWidget(biography: superhero.biography),
+                    ),
+                    const SizedBox(height: 36),
                   ],
                 ),
               ),
@@ -384,14 +390,124 @@ class BiographyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      alignment: Alignment.center,
-      child: Text(
-        biography.toJson.toString(),
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, color: SuperheroesColors.whiteText),
+    final AlignmentInfo? alignmentInfo = AlignmentInfo.fromAlignment(
+      biography.alignment,
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Stack(
+        alignment: AlignmentGeometry.topEnd,
+        children: [
+          Container(
+            padding: EdgeInsets.all(16),
+            //height: 300,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: SuperheroesColors.superheroPageImageBackground,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Bio'.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    //height: 1.2,
+                    fontSize: 18,
+                    color: SuperheroesColors.whiteText,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                BioElement(title: 'Full Name', text: biography.fullName),
+                const SizedBox(height: 20),
+                BioElement(
+                  title: 'Alliases',
+                  text: biography.aliases.join(', '),
+                ),
+                const SizedBox(height: 20),
+                BioElement(
+                  title: 'Place of Birth',
+                  text: biography.placeOfBirth,
+                ),
+              ],
+            ),
+          ),
+          if (alignmentInfo != null)
+            AlignmentMark(alignmentInfo: alignmentInfo),
+        ],
       ),
+    );
+  }
+}
+
+class AlignmentMark extends StatelessWidget {
+  final AlignmentInfo alignmentInfo;
+  const AlignmentMark({super.key, required this.alignmentInfo});
+
+  @override
+  Widget build(BuildContext context) {
+    return RotatedBox(
+      quarterTurns: 1,
+      child: Container(
+        height: 24,
+        width: 70,
+        //color: alignmentInfo.color,
+        decoration: BoxDecoration(
+          color: alignmentInfo.color,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
+        ),
+        //padding: EdgeInsets.symmetric(vertical: 6),
+        alignment: Alignment.center,
+        child: Text(
+          alignmentInfo.name.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            color: SuperheroesColors.whiteText,
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BioElement extends StatelessWidget {
+  final String title;
+  final String text;
+  const BioElement({super.key, required this.title, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title.toUpperCase(),
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            // height: 1.3,
+            fontSize: 12,
+            color: SuperheroesColors.biographyTitle,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        Text(
+          text,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            // height: 1.3,
+            fontSize: 16,
+            color: SuperheroesColors.whiteText,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
     );
   }
 }

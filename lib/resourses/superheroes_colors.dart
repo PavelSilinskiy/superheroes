@@ -9,6 +9,7 @@ class SuperheroesColors {
   static const Color whiteText = Color(0xFFFFFFFF);
   static const Color focusedSearchText = Colors.white;
   static const Color enabledSearchText = Colors.white54;
+  static const Color biographyTitle = Color(0xFF999999);
 
   static const Color cardColor = Color(0xFF2C3243);
   static const Color cardImageBackground = Color(0x3DFFFFFF);
