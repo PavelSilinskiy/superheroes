@@ -20,6 +20,30 @@ class Powerstats {
     required this.combat,
   });
 
+  @override
+  bool operator ==(Object other) {
+    bool th = (identical(this, other) ||
+        other is Powerstats &&
+            runtimeType == other.runtimeType &&
+            intelligence == other.intelligence &&
+            strength == other.strength &&
+            speed == other.speed &&
+            durability == other.durability &&
+            power == other.power &&
+            combat == other.combat);
+    return th;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        intelligence,
+        strength,
+        speed,
+        durability,
+        power,
+        combat,
+      );
+
   bool isNotNull() =>
       !(intelligence == 'null' ||
           strength == 'null' ||

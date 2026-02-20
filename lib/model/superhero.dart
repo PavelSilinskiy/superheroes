@@ -29,6 +29,36 @@ class Superhero {
     required this.image,
   });
 
+  @override
+  bool operator ==(Object other) {
+    bool th = (identical(this, other) ||
+        other is Superhero &&
+            runtimeType == other.runtimeType &&
+            id == other.id &&
+            name == other.name &&
+            powerstats == other.powerstats &&
+            biography == other.biography &&
+            image == other.image);
+    return th;
+    // return (identical(this, other) ||
+    //     other is Superhero &&
+    //         runtimeType == other.runtimeType &&
+    //         id == other.id &&
+    //         name == other.name &&
+    //         powerstats == other.powerstats &&
+    //         biography == other.biography &&
+    //         image == other.image);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        id,
+        name,
+        powerstats,
+        biography,
+        image,
+      );
+
   factory Superhero.fromJson(Map<String, dynamic> json) => _$SuperheroFromJson(json);
 
   Map<String, dynamic> toJson() => _$SuperheroToJson(this);
