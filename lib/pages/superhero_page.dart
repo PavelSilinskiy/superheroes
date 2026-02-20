@@ -13,6 +13,7 @@ import 'package:superheroes/model/server_image.dart';
 import 'package:superheroes/model/superhero.dart';
 import 'package:superheroes/resourses/superheroes_colors.dart';
 import 'package:superheroes/resourses/superheroes_icons.dart';
+import 'package:superheroes/resourses/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
 
 class SuperheroPage extends StatefulWidget {
@@ -125,6 +126,7 @@ class SuperheroAppBar extends StatelessWidget {
       pinned: true,
       floating: true,
       expandedHeight: 348,
+      foregroundColor: Colors.white,
       backgroundColor: SuperheroesColors.background,
       actions: [StarWidget()],
       flexibleSpace: FlexibleSpaceBar(
@@ -141,6 +143,18 @@ class SuperheroAppBar extends StatelessWidget {
         background: CachedNetworkImage(
           imageUrl: superhero.image.url,
           fit: BoxFit.cover,
+          placeholder: (context, str) {
+            return Container(
+              color: SuperheroesColors.superheroPageImageBackground,
+            );
+          },
+          errorWidget: (context, str, error) {
+            return Container(
+              alignment: Alignment.center,
+              color: SuperheroesColors.superheroPageImageBackground,
+              child: Image.asset(SuperheroesImages.unknownHero, height: 264),
+            );
+          },
         ),
       ),
     );
