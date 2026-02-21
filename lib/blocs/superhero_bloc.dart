@@ -16,6 +16,7 @@ class SuperheroBloc {
   http.Client? client;
   String id;
   final _superheroSubject = BehaviorSubject<Superhero>();
+  final _superheroPageStateSubject = BehaviorSubject<SuperheroPageState>();
   //final _storage = FavoriteSuperheroesStorage();
   StreamSubscription? requestSubscription;
   StreamSubscription? getFromFavoritesSubscription;
@@ -29,16 +30,27 @@ class SuperheroBloc {
 
   Stream<Superhero> observeSuperhero() => _superheroSubject.stream.distinct();
 
+  Stream<SuperheroPageState> observeSuperheroPageState() =>
+      _superheroPageStateSubject.stream.distinct();
+
   Stream<bool> observeIsFavorite() =>
       FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
   void requestSuperhero() {
+    if (_superheroPageStateSubject.valueOrNull != SuperheroPageState.loaded) {
+      _superheroPageStateSubject.add(SuperheroPageState.loading);
+    }
     requestSubscription?.cancel();
     requestSubscription = request(id).asStream().listen(
       (superhero) {
         _superheroSubject.add(superhero);
+        _superheroPageStateSubject.add(SuperheroPageState.loaded);
       },
       onError: (error, stackTrace) {
+        if (_superheroPageStateSubject.valueOrNull !=
+            SuperheroPageState.loaded) {
+          _superheroPageStateSubject.add(SuperheroPageState.error);
+        }
         print('Error happened in requestSuperhero(): $error, $stackTrace');
       },
     );
@@ -46,18 +58,22 @@ class SuperheroBloc {
 
   void getFromFavorites() async {
     getFromFavoritesSubscription?.cancel();
-    getFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance().getSuperhero(id).asStream().listen(
-      (superhero) {
-        if (superhero != null) {
-          _superheroSubject.add(superhero);
-        } else {
-          print('Superhero with id $id is not in favorites');
-        }
-      },
-      onError: (error, stackTrace) {
-        print('Error happened in getFromFavorites(): $error, $stackTrace');
-      },
-    );
+    getFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance()
+        .getSuperhero(id)
+        .asStream()
+        .listen(
+          (superhero) {
+            if (superhero != null) {
+              _superheroSubject.add(superhero);
+              _superheroPageStateSubject.add(SuperheroPageState.loaded);
+            } else {
+              print('Superhero with id $id is not in favorites');
+            }
+          },
+          onError: (error, stackTrace) {
+            print('Error happened in getFromFavorites(): $error, $stackTrace');
+          },
+        );
   }
 
   void addToFavorites() async {
@@ -145,3 +161,5 @@ class SuperheroBloc {
     client?.close();
   }
 }
+
+enum SuperheroPageState { loading, loaded, error }
