@@ -104,17 +104,19 @@ class MainPageStateWidget extends StatelessWidget {
           final state = snapshot.data!;
           switch (state) {
             case MainPageState.noFavorites:
-              return InfoWithButton(
-                title: 'No favorites yet',
-                subtitle: 'Search and add',
-                buttonText: 'Search',
-                assetImage: SuperheroesImages.ironman,
-                imageHeight: 119,
-                imageWidth: 108,
-                imageTopPudding: 9,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(textFieldFocusNode);
-                },
+              return Center(
+                child: InfoWithButton(
+                  title: 'No favorites yet',
+                  subtitle: 'Search and add',
+                  buttonText: 'Search',
+                  assetImage: SuperheroesImages.ironman,
+                  imageHeight: 119,
+                  imageWidth: 108,
+                  imageTopPudding: 9,
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(textFieldFocusNode);
+                  },
+                ),
               );
 
             case MainPageState.minSymbols:
@@ -124,29 +126,33 @@ class MainPageStateWidget extends StatelessWidget {
               return LoadingIndicator();
 
             case MainPageState.nothingFound:
-              return InfoWithButton(
-                title: 'Nothing found',
-                subtitle: 'Search for something else',
-                buttonText: 'Search',
-                assetImage: SuperheroesImages.hulk,
-                imageHeight: 112,
-                imageWidth: 84,
-                imageTopPudding: 16,
-                onTap: () {
-                  FocusScope.of(context).requestFocus(textFieldFocusNode);
-                },
+              return Center(
+                child: InfoWithButton(
+                  title: 'Nothing found',
+                  subtitle: 'Search for something else',
+                  buttonText: 'Search',
+                  assetImage: SuperheroesImages.hulk,
+                  imageHeight: 112,
+                  imageWidth: 84,
+                  imageTopPudding: 16,
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(textFieldFocusNode);
+                  },
+                ),
               );
 
             case MainPageState.loadingError:
-              return InfoWithButton(
-                title: 'Error happened',
-                subtitle: 'Please, try again',
-                buttonText: 'Retry',
-                assetImage: SuperheroesImages.superman,
-                imageHeight: 106,
-                imageWidth: 126,
-                imageTopPudding: 24,
-                onTap: bloc.retry,
+              return Center(
+                child: InfoWithButton(
+                  title: 'Error happened',
+                  subtitle: 'Please, try again',
+                  buttonText: 'Retry',
+                  assetImage: SuperheroesImages.superman,
+                  imageHeight: 106,
+                  imageWidth: 126,
+                  imageTopPudding: 24,
+                  onTap: bloc.retry,
+                ),
               );
 
             case MainPageState.searchResults:

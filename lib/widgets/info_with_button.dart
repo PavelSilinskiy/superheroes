@@ -26,56 +26,53 @@ class InfoWithButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-
-        children: [
-          Stack(
-            alignment: AlignmentGeometry.topCenter,
-            children: [
-              Container(
-                height: 108,
-                width: 108,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: SuperheroesColors.foregroundColor,
-                ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Stack(
+          alignment: AlignmentGeometry.topCenter,
+          children: [
+            Container(
+              height: 108,
+              width: 108,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: SuperheroesColors.foregroundColor,
               ),
-              Padding(
-                padding: EdgeInsets.only(top: imageTopPudding),
-                child: Image.asset(
-                  assetImage,
-                  width: imageWidth,
-                  height: imageHeight,
-                  fit: BoxFit.cover,
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: imageTopPudding),
+              child: Image.asset(
+                assetImage,
+                width: imageWidth,
+                height: imageHeight,
+                fit: BoxFit.cover,
               ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Text(
-            title,
-            style: TextStyle(
-              color: SuperheroesColors.whiteText,
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
             ),
+          ],
+        ),
+        SizedBox(height: 20),
+        Text(
+          title,
+          style: TextStyle(
+            color: SuperheroesColors.whiteText,
+            fontSize: 32,
+            fontWeight: FontWeight.w800,
           ),
-          SizedBox(height: 20),
-          Text(
-            subtitle.toUpperCase(),
-            style: TextStyle(
-              color: SuperheroesColors.whiteText,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
+        ),
+        SizedBox(height: 20),
+        Text(
+          subtitle.toUpperCase(),
+          style: TextStyle(
+            color: SuperheroesColors.whiteText,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
           ),
-          SizedBox(height: 30),
-          ActionButton(text: buttonText, onPressed: onTap),
-        ],
-      ),
+        ),
+        SizedBox(height: 30),
+        ActionButton(text: buttonText, onPressed: onTap),
+      ],
     );
   }
 }
