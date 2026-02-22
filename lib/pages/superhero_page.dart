@@ -15,6 +15,7 @@ import 'package:superheroes/resourses/superheroes_colors.dart';
 import 'package:superheroes/resourses/superheroes_icons.dart';
 import 'package:superheroes/resourses/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
+import 'package:superheroes/widgets/info_with_button.dart';
 
 import '../model/alignmentInfo.dart';
 
@@ -41,10 +42,7 @@ class _SuperheroPageState extends State<SuperheroPage> {
   Widget build(BuildContext context) {
     return Provider<SuperheroBloc>.value(
       value: bloc,
-      child: Scaffold(
-        backgroundColor: SuperheroesColors.background,
-        body: SuperheroPageContent(),
-      ),
+      child: SuperheroPageStateWidget(),
     );
   }
 
@@ -55,8 +53,8 @@ class _SuperheroPageState extends State<SuperheroPage> {
   }
 }
 
-class SuperheroPageContent extends StatelessWidget {
-  const SuperheroPageContent({super.key});
+class SuperheroPageStateWidget extends StatelessWidget {
+  const SuperheroPageStateWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,40 +80,132 @@ class SuperheroPageContent extends StatelessWidget {
     //     combat: "100",
     //   ),
     // );
+
     return StreamBuilder(
-      stream: bloc.observeSuperhero(),
+      stream: bloc.observeSuperheroPageState(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data == null) {
           return SizedBox();
         } else {
-          final superhero = snapshot.data!;
-          return CustomScrollView(
-            slivers: [
-              SuperheroAppBar(superhero: superhero),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 30),
-                    if (superhero.powerstats.isNotNull())
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: PowerstatsWidget(
-                          powerstats: superhero.powerstats,
-                        ),
-                      ),
-                    const SizedBox(height: 36),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: BiographyWidget(biography: superhero.biography),
-                    ),
-                    const SizedBox(height: 36),
-                  ],
-                ),
-              ),
-            ],
-          );
+          final state = snapshot.data!;
+          switch (state) {
+            case SuperheroPageState.loading:
+              return LoadingStateWidget();
+            case SuperheroPageState.loaded:
+              return LoadedStateWidget();
+            case SuperheroPageState.error:
+              return ErrorStateWidget();
+          }
         }
       },
+    );
+  }
+}
+
+class LoadedStateWidget extends StatelessWidget {
+  const LoadedStateWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
+    return Scaffold(
+      backgroundColor: SuperheroesColors.background,
+      body: StreamBuilder(
+        stream: bloc.observeSuperhero(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data == null) {
+            return SizedBox();
+          } else {
+            final superhero = snapshot.data!;
+            return CustomScrollView(
+              slivers: [
+                SuperheroAppBar(superhero: superhero),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      if (superhero.powerstats.isNotNull())
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: PowerstatsWidget(
+                            powerstats: superhero.powerstats,
+                          ),
+                        ),
+                      const SizedBox(height: 36),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: BiographyWidget(biography: superhero.biography),
+                      ),
+                      const SizedBox(height: 36),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class ErrorStateWidget extends StatelessWidget {
+  const ErrorStateWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SuperheroBloc>(context, listen: false);
+    return Scaffold(
+      backgroundColor: SuperheroesColors.background,
+      appBar: AppBar(
+        backgroundColor: SuperheroesColors.background,
+        foregroundColor: SuperheroesColors.iconsColor,
+      ),
+      body: Align(
+        alignment: AlignmentGeometry.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 59),
+          child: InfoWithButton(
+            title: 'Error happened',
+            subtitle: 'Please, try again',
+            buttonText: 'Retry',
+            assetImage: SuperheroesImages.superman,
+            imageHeight: 106,
+            imageWidth: 126,
+            imageTopPudding: 24,
+            onTap: bloc.retry,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LoadingStateWidget extends StatelessWidget {
+  const LoadingStateWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: SuperheroesColors.background,
+      appBar: AppBar(
+        backgroundColor: SuperheroesColors.background,
+        foregroundColor: SuperheroesColors.iconsColor,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 59),
+        child: Align(
+          alignment: AlignmentGeometry.topCenter,
+          child: SizedBox(
+            height: 44,
+            width: 44,
+            child: CircularProgressIndicator(
+              color: SuperheroesColors.foregroundColor,
+              strokeWidth: 4,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
