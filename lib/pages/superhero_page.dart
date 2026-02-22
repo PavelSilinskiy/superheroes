@@ -132,7 +132,7 @@ class SuperheroAppBar extends StatelessWidget {
       pinned: true,
       floating: true,
       expandedHeight: 348,
-      foregroundColor: Colors.white,
+      foregroundColor: SuperheroesColors.iconsColor,
       backgroundColor: SuperheroesColors.background,
       actions: [StarWidget()],
       flexibleSpace: FlexibleSpaceBar(
