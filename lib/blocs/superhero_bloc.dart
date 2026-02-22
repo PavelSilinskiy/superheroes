@@ -56,6 +56,11 @@ class SuperheroBloc {
     );
   }
 
+  void retry() {
+    _superheroPageStateSubject.add(SuperheroPageState.loading);
+    requestSuperhero();
+  }
+
   void getFromFavorites() async {
     getFromFavoritesSubscription?.cancel();
     getFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance()
