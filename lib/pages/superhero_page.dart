@@ -42,7 +42,10 @@ class _SuperheroPageState extends State<SuperheroPage> {
   Widget build(BuildContext context) {
     return Provider<SuperheroBloc>.value(
       value: bloc,
-      child: SuperheroPageStateWidget(),
+      child: Scaffold(
+        backgroundColor: SuperheroesColors.background,
+        body: SuperheroPageStateWidget(),
+      ),
     );
   }
 
@@ -108,43 +111,40 @@ class LoadedStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SuperheroBloc>(context, listen: false);
-    return Scaffold(
-      backgroundColor: SuperheroesColors.background,
-      body: StreamBuilder(
-        stream: bloc.observeSuperhero(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data == null) {
-            return SizedBox();
-          } else {
-            final superhero = snapshot.data!;
-            return CustomScrollView(
-              slivers: [
-                SuperheroAppBar(superhero: superhero),
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      if (superhero.powerstats.isNotNull())
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: PowerstatsWidget(
-                            powerstats: superhero.powerstats,
-                          ),
-                        ),
-                      const SizedBox(height: 30),
+    return StreamBuilder(
+      stream: bloc.observeSuperhero(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return SizedBox();
+        } else {
+          final superhero = snapshot.data!;
+          return CustomScrollView(
+            slivers: [
+              SuperheroAppBar(superhero: superhero),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    if (superhero.powerstats.isNotNull())
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: BiographyWidget(biography: superhero.biography),
+                        child: PowerstatsWidget(
+                          powerstats: superhero.powerstats,
+                        ),
                       ),
-                      const SizedBox(height: 36),
-                    ],
-                  ),
+                    const SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: BiographyWidget(biography: superhero.biography),
+                    ),
+                    const SizedBox(height: 36),
+                  ],
                 ),
-              ],
-            );
-          }
-        },
-      ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }
@@ -155,28 +155,30 @@ class ErrorStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SuperheroBloc>(context, listen: false);
-    return Scaffold(
-      backgroundColor: SuperheroesColors.background,
-      appBar: AppBar(
-        backgroundColor: SuperheroesColors.background,
-        foregroundColor: SuperheroesColors.iconsColor,
-      ),
-      body: Align(
-        alignment: AlignmentGeometry.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 59),
-          child: InfoWithButton(
-            title: 'Error happened',
-            subtitle: 'Please, try again',
-            buttonText: 'Retry',
-            assetImage: SuperheroesImages.superman,
-            imageHeight: 106,
-            imageWidth: 126,
-            imageTopPudding: 24,
-            onTap: bloc.retry,
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: SuperheroesColors.background,
+          foregroundColor: SuperheroesColors.iconsColor,
+          elevation: 0,
+        ),
+        Align(
+          alignment: AlignmentGeometry.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 59),
+            child: InfoWithButton(
+              title: 'Error happened',
+              subtitle: 'Please, try again',
+              buttonText: 'Retry',
+              assetImage: SuperheroesImages.superman,
+              imageHeight: 106,
+              imageWidth: 126,
+              imageTopPudding: 24,
+              onTap: bloc.retry,
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -186,26 +188,28 @@ class LoadingStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: SuperheroesColors.background,
-      appBar: AppBar(
-        backgroundColor: SuperheroesColors.background,
-        foregroundColor: SuperheroesColors.iconsColor,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 59),
-        child: Align(
-          alignment: AlignmentGeometry.topCenter,
-          child: SizedBox(
-            height: 44,
-            width: 44,
-            child: CircularProgressIndicator(
-              color: SuperheroesColors.foregroundColor,
-              strokeWidth: 4,
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: SuperheroesColors.background,
+          foregroundColor: SuperheroesColors.iconsColor,
+          elevation: 0,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 59),
+          child: Align(
+            alignment: AlignmentGeometry.topCenter,
+            child: SizedBox(
+              height: 44,
+              width: 44,
+              child: CircularProgressIndicator(
+                color: SuperheroesColors.foregroundColor,
+                strokeWidth: 4,
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -369,8 +373,8 @@ class PowerstatsWidget extends StatelessWidget {
 }
 
 class PowerstatWidget extends StatelessWidget {
-  String title;
-  double value;
+  final String title;
+  final double value;
   final canvas = Canvas(PictureRecorder());
   //CustomPaint paint = CustomPaint();
 
