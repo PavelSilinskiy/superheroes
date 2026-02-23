@@ -489,7 +489,7 @@ class BiographyWidget extends StatelessWidget {
         alignment: AlignmentGeometry.topEnd,
         children: [
           Container(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 24),
             //height: 300,
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -512,7 +512,7 @@ class BiographyWidget extends StatelessWidget {
                 BioElement(title: 'Full Name', text: biography.fullName),
                 const SizedBox(height: 20),
                 BioElement(
-                  title: 'Alliases',
+                  title: 'Aliases',
                   text: biography.aliases.join(', '),
                 ),
                 const SizedBox(height: 20),
@@ -587,6 +587,7 @@ class BioElement extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
+        const SizedBox(height: 4),
         Text(
           text,
           textAlign: TextAlign.left,

@@ -414,6 +414,7 @@ class ListTile extends StatelessWidget {
       background: Container(
         height: 70,
         alignment: Alignment.centerLeft,
+        // margin: const EdgeInsets.only(bottom: 2),
         padding: const EdgeInsets.only(left: 16.0),
         decoration: BoxDecoration(
           color: SuperheroesColors.removeFromFavoritesBackground,
@@ -423,7 +424,7 @@ class ListTile extends StatelessWidget {
           'Remove\nfrom\nfavorites'.toUpperCase(),
           textAlign: TextAlign.left,
           style: TextStyle(
-            height: 1.2,
+            //height: 1.2,
             
             fontSize: 12,
             color: SuperheroesColors.whiteText,
@@ -437,7 +438,7 @@ class ListTile extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16.0),
         decoration: BoxDecoration(
           color: SuperheroesColors.removeFromFavoritesBackground,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
           'Remove\nfrom\nfavorites'.toUpperCase(),
@@ -445,7 +446,7 @@ class ListTile extends StatelessWidget {
           textAlign: TextAlign.right,
           style: TextStyle(
             fontSize: 12,
-            height: 1.2,
+            //height: 1.16,
             color: SuperheroesColors.whiteText,
             fontWeight: FontWeight.w700,
           ),

@@ -11,17 +11,17 @@ class AlignmentInfo {
 
   static const AlignmentInfo good = AlignmentInfo._(
     name: 'good',
-    color: Colors.green,
+    color: Color(0xFF2AAB6A),
   );
 
   static const AlignmentInfo bad = AlignmentInfo._(
     name: 'bad',
-    color: Colors.red,
+    color: Color(0xFF961B1B)
   );
 
   static const AlignmentInfo neutral = AlignmentInfo._(
     name: 'neutral',
-    color: Colors.grey,
+    color: Color(0xFF727272),
   );
 
   static AlignmentInfo? fromAlignment(String alignment) {
