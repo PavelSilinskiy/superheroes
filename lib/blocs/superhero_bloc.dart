@@ -17,13 +17,71 @@ class SuperheroBloc {
   String id;
   final _superheroSubject = BehaviorSubject<Superhero>();
   final _superheroPageStateSubject = BehaviorSubject<SuperheroPageState>();
+  final _loadingFromFavoritesSubject = BehaviorSubject<LoadingState>.seeded(
+    LoadingState.initial,
+  );
+  final _loadingFromNetworkSubject = BehaviorSubject<LoadingState>.seeded(
+    LoadingState.initial,
+  );
   //final _storage = FavoriteSuperheroesStorage();
   StreamSubscription? requestSubscription;
   StreamSubscription? getFromFavoritesSubscription;
   StreamSubscription? addToFavoritesSubscription;
   StreamSubscription? removeFromFavoritesSubscription;
+  StreamSubscription? loadingSubscription;
+
+  //TODO: Storage getter
 
   SuperheroBloc({this.client, required this.id}) {
+    loadingSubscription?.cancel();
+    loadingSubscription =
+        Rx.combineLatest2<LoadingState, LoadingState, SuperheroPageState?>(
+          _loadingFromFavoritesSubject.distinct(),
+          _loadingFromNetworkSubject.distinct(),
+          (loadingFromFavorites, loadingFromNetwork) {
+            switch (loadingFromFavorites) {
+              case LoadingState.initial:
+                switch (loadingFromNetwork) {
+                  case LoadingState.initial:
+                    return null;
+                  case LoadingState.loading:
+                    return SuperheroPageState.loading;
+                  case LoadingState.loaded:
+                    return SuperheroPageState.loaded;
+                  case LoadingState.error:
+                    return null;
+                }
+              case LoadingState.loading:
+                switch (loadingFromNetwork) {
+                  case LoadingState.initial:
+                    return null;
+                  case LoadingState.loading:
+                    return null; //null? maybe SuperheroPageState.loading?
+                  case LoadingState.loaded:
+                    return SuperheroPageState.loaded;
+                  case LoadingState.error:
+                    return null;
+                }
+              case LoadingState.loaded:
+                return SuperheroPageState.loaded;
+              case LoadingState.error:
+                switch (loadingFromNetwork) {
+                  case LoadingState.initial:
+                    return SuperheroPageState.loading; //null?
+                  case LoadingState.loading:
+                    return SuperheroPageState.loading;
+                  case LoadingState.loaded:
+                    return SuperheroPageState.loaded;
+                  case LoadingState.error:
+                    return SuperheroPageState.error;
+                }
+            }
+          },
+        ).listen((value) {
+          if (value != null) {
+            _superheroPageStateSubject.add(value);
+          }
+        });
     getFromFavorites();
     requestSuperhero();
   }
@@ -37,45 +95,45 @@ class SuperheroBloc {
       FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
   void requestSuperhero() {
-    if (_superheroPageStateSubject.valueOrNull != SuperheroPageState.loaded) {
-      _superheroPageStateSubject.add(SuperheroPageState.loading);
-    }
     requestSubscription?.cancel();
+    _loadingFromNetworkSubject.add(LoadingState.loading);
     requestSubscription = request(id).asStream().listen(
       (superhero) {
         _superheroSubject.add(superhero);
-        _superheroPageStateSubject.add(SuperheroPageState.loaded);
+        _loadingFromNetworkSubject.add(LoadingState.loaded);
       },
       onError: (error, stackTrace) {
-        if (_superheroPageStateSubject.valueOrNull !=
-            SuperheroPageState.loaded) {
-          _superheroPageStateSubject.add(SuperheroPageState.error);
-        }
+        print('1 1 1 1 1 1  1 1 1 1 1  1 1 1 1  1 1');
         print('Error happened in requestSuperhero(): $error, $stackTrace');
+        _loadingFromNetworkSubject.add(LoadingState.error);
       },
     );
   }
 
   void retry() {
-    _superheroPageStateSubject.add(SuperheroPageState.loading);
     requestSuperhero();
   }
 
   void getFromFavorites() async {
     getFromFavoritesSubscription?.cancel();
+    _loadingFromFavoritesSubject.add(LoadingState.loading);
     getFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance()
         .getSuperhero(id)
         .asStream()
         .listen(
           (superhero) {
             if (superhero != null) {
+              _loadingFromFavoritesSubject.add(LoadingState.loaded);
               _superheroSubject.add(superhero);
-              _superheroPageStateSubject.add(SuperheroPageState.loaded);
             } else {
+              _loadingFromFavoritesSubject.add(LoadingState.error);
+              //print('1 1 1 1 1 1  1 1 1 1 1  1 1 1 1  1 1');
               print('Superhero with id $id is not in favorites');
             }
           },
           onError: (error, stackTrace) {
+            _loadingFromFavoritesSubject.add(LoadingState.error);
+            //print('2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2  2 2 2 2');
             print('Error happened in getFromFavorites(): $error, $stackTrace');
           },
         );
@@ -162,9 +220,14 @@ class SuperheroBloc {
     addToFavoritesSubscription?.cancel();
     removeFromFavoritesSubscription?.cancel();
     requestSubscription?.cancel();
+    loadingSubscription?.cancel();
+    _loadingFromFavoritesSubject.close();
+    _loadingFromNetworkSubject.close();
     _superheroSubject.close();
     client?.close();
   }
 }
+
+enum LoadingState { initial, loading, loaded, error }
 
 enum SuperheroPageState { loading, loaded, error }
