@@ -381,34 +381,32 @@ class PowerstatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
+      alignment: Alignment.topCenter,
       children: [
-        //CustomPaint(painter: Paint),
-        Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            ArcWidget(color: calculateColorByValue(value), value: value),
-            Padding(
-              padding: const EdgeInsets.only(top: 17),
-              child: Text(
-                '${(value * 100).toInt()}',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: calculateColorByValue(value),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                ),
-              ),
+        ArcWidget(color: calculateColorByValue(value), value: value),
+        Padding(
+          padding: const EdgeInsets.only(top: 17),
+          child: Text(
+            '${(value * 100).toInt()}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: calculateColorByValue(value),
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
             ),
-          ],
+          ),
         ),
-        Text(
-          title.toUpperCase(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: SuperheroesColors.whiteText,
-            fontWeight: FontWeight.w700,
-            fontSize: 12,
+        Padding(
+          padding: const EdgeInsets.only(top: 44),
+          child: Text(
+            title.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: SuperheroesColors.whiteText,
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+            ),
           ),
         ),
       ],
