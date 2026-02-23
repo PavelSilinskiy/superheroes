@@ -131,7 +131,7 @@ class LoadedStateWidget extends StatelessWidget {
                             powerstats: superhero.powerstats,
                           ),
                         ),
-                      const SizedBox(height: 36),
+                      const SizedBox(height: 30),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: BiographyWidget(biography: superhero.biography),
@@ -292,81 +292,78 @@ class PowerstatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 292,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Powerstats'.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: SuperheroesColors.whiteText,
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Powerstats'.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: SuperheroesColors.whiteText,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
+        ),
+        SizedBox(height: 24),
+        Row(
+          children: [
+            Expanded(
+              child: Center(
+                child: PowerstatWidget(
+                  title: 'intelligence',
+                  value: powerstats.intelligencePersent,
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: Center(
-                  child: PowerstatWidget(
-                    title: 'intelligence',
-                    value: powerstats.intelligencePersent,
-                  ),
+            Expanded(
+              child: Center(
+                child: PowerstatWidget(
+                  title: 'strength',
+                  value: powerstats.strengthPersent,
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: PowerstatWidget(
-                    title: 'strength',
-                    value: powerstats.strengthPersent,
-                  ),
+            ),
+            Expanded(
+              child: Center(
+                child: PowerstatWidget(
+                  title: 'speed',
+                  value: powerstats.speedPersent,
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: PowerstatWidget(
-                    title: 'speed',
-                    value: powerstats.speedPersent,
-                  ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: Center(
+                child: PowerstatWidget(
+                  title: 'durability',
+                  value: powerstats.durabilityPersent,
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: Center(
-                  child: PowerstatWidget(
-                    title: 'durability',
-                    value: powerstats.durabilityPersent,
-                  ),
+            ),
+            Expanded(
+              child: Center(
+                child: PowerstatWidget(
+                  title: 'power',
+                  value: powerstats.powerPersent,
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: PowerstatWidget(
-                    title: 'power',
-                    value: powerstats.powerPersent,
-                  ),
+            ),
+            Expanded(
+              child: Center(
+                child: PowerstatWidget(
+                  title: 'combat',
+                  value: powerstats.combatPersent,
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: PowerstatWidget(
-                    title: 'combat',
-                    value: powerstats.combatPersent,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
